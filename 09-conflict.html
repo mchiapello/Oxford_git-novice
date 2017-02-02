@@ -1,97 +1,281 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="generator" content="pandoc">
-    <title>Software Carpentry: Version Control with Git</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
-    <link rel="stylesheet" type="text/css" href="css/swc.css" />
-    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
-    <meta charset="UTF-8" />
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body class="lesson">
-    <div class="container card">
-      <div class="banner">
-        <a href="http://software-carpentry.org" title="Software Carpentry">
-          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
-        </a>
-      </div>
-      <article>
-      <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-          <h1 class="title">Version Control with Git</h1>
-          <h2 class="subtitle">Conflicts</h2>
-<section class="objectives panel panel-warning">
-<div class="panel-heading">
-<h2><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
-</div>
-<div class="panel-body">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Learning Objectives {.objectives}</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<blockquote>
+<h2>Learning Objectives {.objectives}</h2>
+
 <ul>
-<li>Explain what conflicts are and when they can occur.</li>
-<li>Resolve conflicts resulting from a merge.</li>
+<li>  Explain what conflicts are and when they can occur.</li>
+<li>  Resolve conflicts resulting from a merge.</li>
 </ul>
-</div>
-</section>
-<p>As soon as people can work in parallel, it’s likely someone’s going to step on someone else’s toes. This will even happen with a single person: if we are working on a piece of software on both our laptop and a server in the lab, we could make different changes to each copy. Version control helps us manage these <a href="reference.html#conflicts">conflicts</a> by giving us tools to <a href="reference.html#resolve">resolve</a> overlapping changes.</p>
-<p>To see how we can resolve conflicts, we must first create one. The file <code>mars.txt</code> currently looks like this in both partners’ copies of our <code>planets</code> repository:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">cat</span> mars.txt</code></pre>
-<pre class="output"><code>Cold and dry, but everything is my favorite color
-The two moons may be a problem for Wolfman
-But the Mummy will appreciate the lack of humidity</code></pre>
-<p>Let’s add a line to one partner’s copy only:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">nano</span> mars.txt
-$ <span class="kw">cat</span> mars.txt</code></pre>
-<pre class="output"><code>Cold and dry, but everything is my favorite color
+</blockquote>
+
+<p>As soon as people can work in parallel, it&#39;s likely someone&#39;s going to step on someone
+else&#39;s toes.  This will even happen with a single person: if we are working on
+a piece of software on both our laptop and a server in the lab, we could make
+different changes to each copy.  Version control helps us manage these
+<a href="reference.html#conflicts">conflicts</a> by giving us tools to
+<a href="reference.html#resolve">resolve</a> overlapping changes.</p>
+
+<p>To see how we can resolve conflicts, we must first create one.  The file
+<code>mars.txt</code> currently looks like this in both partners&#39; copies of our <code>planets</code>
+repository:</p>
+
+<pre><code class="bash">$ cat mars.txt
+</code></pre>
+
+<pre><code class="output">Cold and dry, but everything is my favorite color
 The two moons may be a problem for Wolfman
 But the Mummy will appreciate the lack of humidity
-This line added to Wolfman&#39;s copy</code></pre>
+</code></pre>
+
+<p>Let&#39;s add a line to one partner&#39;s copy only:</p>
+
+<pre><code class="bash">$ nano mars.txt
+$ cat mars.txt
+</code></pre>
+
+<pre><code class="output">Cold and dry, but everything is my favorite color
+The two moons may be a problem for Wolfman
+But the Mummy will appreciate the lack of humidity
+This line added to Wolfman&#39;s copy
+</code></pre>
+
 <p>and then push the change to GitHub:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> add mars.txt
-$ <span class="kw">git</span> commit -m <span class="st">&quot;Adding a line in our home copy&quot;</span></code></pre>
-<pre class="output"><code>[master 5ae9631] Adding a line in our home copy
- 1 file changed, 1 insertion(+)</code></pre>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> push origin master</code></pre>
-<pre class="output"><code>Counting objects: 5, done.
+
+<pre><code class="bash">$ git add mars.txt
+$ git commit -m &quot;Adding a line in our home copy&quot;
+</code></pre>
+
+<pre><code class="output">[master 5ae9631] Adding a line in our home copy
+ 1 file changed, 1 insertion(+)
+</code></pre>
+
+<pre><code class="bash">$ git push origin master
+</code></pre>
+
+<pre><code class="output">Counting objects: 5, done.
 Delta compression using up to 4 threads.
 Compressing objects: 100% (3/3), done.
 Writing objects: 100% (3/3), 352 bytes, done.
 Total 3 (delta 1), reused 0 (delta 0)
 To https://github.com/vlad/planets
-   29aba7c..dabb4c8  master -&gt; master</code></pre>
-<p>Now let’s have the other partner make a different change to their copy <em>without</em> updating from GitHub:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">nano</span> mars.txt
-$ <span class="kw">cat</span> mars.txt</code></pre>
-<pre class="output"><code>Cold and dry, but everything is my favorite color
+   29aba7c..dabb4c8  master -&gt; master
+</code></pre>
+
+<p>Now let&#39;s have the other partner
+make a different change to their copy
+<em>without</em> updating from GitHub:</p>
+
+<pre><code class="bash">$ nano mars.txt
+$ cat mars.txt
+</code></pre>
+
+<pre><code class="output">Cold and dry, but everything is my favorite color
 The two moons may be a problem for Wolfman
 But the Mummy will appreciate the lack of humidity
-We added a different line in the other copy</code></pre>
+We added a different line in the other copy
+</code></pre>
+
 <p>We can commit the change locally:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> add mars.txt
-$ <span class="kw">git</span> commit -m <span class="st">&quot;Adding a line in my copy&quot;</span></code></pre>
-<pre class="output"><code>[master 07ebc69] Adding a line in my copy
- 1 file changed, 1 insertion(+)</code></pre>
-<p>but Git won’t let us push it to GitHub:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> push origin master</code></pre>
-<pre class="output"><code>To https://github.com/vlad/planets.git
+
+<pre><code class="bash">$ git add mars.txt
+$ git commit -m &quot;Adding a line in my copy&quot;
+</code></pre>
+
+<pre><code class="output">[master 07ebc69] Adding a line in my copy
+ 1 file changed, 1 insertion(+)
+</code></pre>
+
+<p>but Git won&#39;t let us push it to GitHub:</p>
+
+<pre><code class="bash">$ git push origin master
+</code></pre>
+
+<pre><code class="output">To https://github.com/vlad/planets.git
  ! [rejected]        master -&gt; master (non-fast-forward)
 error: failed to push some refs to &#39;https://github.com/vlad/planets.git&#39;
 hint: Updates were rejected because the tip of your current branch is behind
 hint: its remote counterpart. Merge the remote changes (e.g. &#39;git pull&#39;)
 hint: before pushing again.
-hint: See the &#39;Note about fast-forwards&#39; in &#39;git push --help&#39; for details.</code></pre>
-<div class="figure">
-<img src="fig/conflict.svg" alt="The conflicting changes" /><p class="caption">The conflicting changes</p>
-</div>
-<p>Git detects that the changes made in one copy overlap with those made in the other and stops us from trampling on our previous work. What we have to do is pull the changes from GitHub, <a href="reference.html#merge">merge</a> them into the copy we’re currently working in, and then push that. Let’s start by pulling:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> pull origin master</code></pre>
-<pre class="output"><code>remote: Counting objects: 5, done.        
+hint: See the &#39;Note about fast-forwards&#39; in &#39;git push --help&#39; for details.
+</code></pre>
+
+<p><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KCjxzdmcgdmVyc2lvbj0iMS4yIiBiYXNlUHJvZmlsZT0idGlueSIgd2lkdGg9IjE1Mi40bW0iIGhlaWdodD0iMTM5LjdtbSIgdmlld0JveD0iMCAwIDE1MjQwIDEzOTcwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWU1pZCIgZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXBhdGg9InVybCgjcHJlc2VudGF0aW9uX2NsaXBfcGF0aCkiIHN0cm9rZS13aWR0aD0iMjguMjIyIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOm9vbz0iaHR0cDovL3htbC5vcGVub2ZmaWNlLm9yZy9zdmcvZXhwb3J0IiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CiA8ZGVmcyBjbGFzcz0iQ2xpcFBhdGhHcm91cCI+CiAgPGNsaXBQYXRoIGlkPSJwcmVzZW50YXRpb25fY2xpcF9wYXRoIiBjbGlwUGF0aFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxNTI0MCIgaGVpZ2h0PSIxMzk3MCIvPgogIDwvY2xpcFBhdGg+CiA8L2RlZnM+CiA8ZGVmcz4KICA8Zm9udCBpZD0iRW1iZWRkZWRGb250XzEiIGhvcml6LWFkdi14PSIyMDQ4Ij4KICAgPGZvbnQtZmFjZSBmb250LWZhbWlseT0iRHJvaWQgU2FucyBNb25vIGVtYmVkZGVkIiB1bml0cy1wZXItZW09IjIwNDgiIGZvbnQtd2VpZ2h0PSJub3JtYWwiIGZvbnQtc3R5bGU9Im5vcm1hbCIgYXNjZW50PSIxODc5IiBkZXNjZW50PSI0NzYiLz4KICAgPG1pc3NpbmctZ2x5cGggaG9yaXotYWR2LXg9IjIwNDgiIGQ9Ik0gMCwwIEwgMjA0NywwIDIwNDcsMjA0NyAwLDIwNDcgMCwwIFoiLz4KICAgPGdseXBoIHVuaWNvZGU9InkiIGhvcml6LWFkdi14PSIxMDYwIiBkPSJNIDgyLDEwOTggTCAyNzAsMTA5OCA1MzIsNDQ0IEMgNTg3LDMwNyA2MTYsMjExIDYyMSwxNTQgTCA2MjcsMTU0IEMgNjQyLDIyOSA2NzIsMzI2IDcxNyw0NDYgTCA5NTYsMTA5OCAxMTQ1LDEwOTggNjcwLC0xNDMgQyA2MjUsLTI1OSA1NzMsLTM0NiA1MTQsLTQwNSA0NTUsLTQ2MyAzNzMsLTQ5MiAyNjgsLTQ5MiAyMTEsLTQ5MiAxNTUsLTQ4NiAxMDAsLTQ3NSBMIDEwMCwtMzMwIEMgMTQxLC0zMzggMTg3LC0zNDIgMjM2LC0zNDIgMzAwLC0zNDIgMzUwLC0zMjggMzg2LC0zMDEgNDIxLC0yNzQgNDUzLC0yMjcgNDgxLC0xNjAgTCA1MzksLTEwIDgyLDEwOTggWiIvPgogICA8Z2x5cGggdW5pY29kZT0idyIgaG9yaXotYWR2LXg9IjEyMTgiIGQ9Ik0gODEzLDAgTCA2ODIsNTk2IDYxNCw5MjYgNjA4LDkyNiA1NDMsNTkyIDQwOCwwIDIxOSwwIC00LDEwOTggMTU4LDEwOTggMjU2LDU1NSBDIDI3OSw0MzEgMjk4LDMwMCAzMTMsMTYyIEwgMzE5LDE2MiBDIDM0MCwyODUgMzYyLDQwNSAzODcsNTIwIEwgNTIwLDEwOTggNzEzLDEwOTggODQwLDUyMCBDIDg2OSwzOTAgODkxLDI3MSA5MDcsMTYyIEwgOTEzLDE2MiBDIDkzNCwzMjMgOTU0LDQ1NCA5NzMsNTU1IEwgMTA3NSwxMDk4IDEyMzMsMTA5OCAxMDA4LDAgODEzLDAgWiIvPgogICA8Z2x5cGggdW5pY29kZT0idSIgaG9yaXotYWR2LXg9IjkwMCIgZD0iTSA5MjIsMCBMIDg5NSwxNDcgODg1LDE0NyBDIDgxNSwzNiA3MDQsLTIwIDU1MSwtMjAgMjkwLC0yMCAxNjAsMTE0IDE2MCwzODEgTCAxNjAsMTA5OCAzNDIsMTA5OCAzNDIsMzkxIEMgMzQyLDIxOCA0MjEsMTMxIDU3OCwxMzEgNjg1LDEzMSA3NjQsMTYyIDgxMywyMjQgODYyLDI4NSA4ODcsMzg3IDg4Nyw1MjggTCA4ODcsMTA5OCAxMDY5LDEwOTggMTA2OSwwIDkyMiwwIFoiLz4KICAgPGdseXBoIHVuaWNvZGU9InQiIGhvcml6LWFkdi14PSI4NzQiIGQ9Ik0gMTAyMCwxNTAgTCAxMDIwLDEyIEMgOTMzLC05IDg0OSwtMjAgNzY4LC0yMCA1MjcsLTIwIDQwNiw5NSA0MDYsMzI0IEwgNDA2LDk2MSAxMzksOTYxIDEzOSwxMDU1IDQwNiwxMTA0IDQ4MywxMzkxIDU4OCwxMzkxIDU4OCwxMDk4IDEwMjYsMTA5OCAxMDI2LDk2MSA1ODgsOTYxIDU4OCwzMjQgQyA1ODgsMTk0IDY1MiwxMjkgNzgwLDEyOSA4NDIsMTI5IDkyMiwxMzYgMTAyMCwxNTAgWiIvPgogICA8Z2x5cGggdW5pY29kZT0icyIgaG9yaXotYWR2LXg9IjgyMSIgZD0iTSAyMDMsNDkgTCAyMDMsMjE1IEMgMzMyLDE1OCA0NTUsMTI5IDU3MywxMjkgNzU2LDEyOSA4NDgsMTgzIDg0OCwyOTEgODQ4LDMyOSA4MzIsMzYyIDc5OSwzOTAgNzY2LDQxOCA2OTEsNDUzIDU3Myw0OTYgNDE4LDU1NCAzMjAsNjA3IDI4MCw2NTYgMjM5LDcwNCAyMTksNzYxIDIxOSw4MjcgMjE5LDkxOCAyNTYsOTg5IDMzMSwxMDQxIDQwNSwxMDkyIDUwOCwxMTE4IDYzOSwxMTE4IDc3MSwxMTE4IDg5NCwxMDkzIDEwMDgsMTA0NCBMIDk0OCw4OTUgQyA4MjcsOTQzIDcyMCw5NjcgNjI5LDk2NyA0NzIsOTY3IDM5Myw5MjMgMzkzLDgzNCAzOTMsNzkzIDQxMCw3NjEgNDQ0LDczNyA0NzcsNzEyIDU1NSw2NzggNjc2LDYzNSA4MTcsNTg0IDkxMCw1MzMgOTU3LDQ4NCAxMDAzLDQzNCAxMDI2LDM3MyAxMDI2LDMwMSAxMDI2LDIwMSA5ODcsMTIzIDkwOSw2NiA4MzEsOSA3MjEsLTIwIDU3OCwtMjAgNDEzLC0yMCAyODgsMyAyMDMsNDkgWiIvPgogICA8Z2x5cGggdW5pY29kZT0iciIgaG9yaXotYWR2LXg9Ijc5NCIgZD0iTSAxMDU5LDEwNzMgTCAxMDEwLDkwNyBDIDkyOCw5MzcgODUzLDk1MiA3ODYsOTUyIDY3Nyw5NTIgNTk0LDkyMSA1MzUsODYwIDQ3Niw3OTggNDQ2LDcwOSA0NDYsNTkyIEwgNDQ2LDAgMjY0LDAgMjY0LDEwOTggNDEyLDEwOTggNDM0LDg5NyA0NDIsODk3IEMgNDkzLDk3NiA1NDcsMTAzMyA2MDUsMTA2NyA2NjMsMTEwMSA3MzQsMTExOCA4MTksMTExOCA4OTgsMTExOCA5NzgsMTEwMyAxMDU5LDEwNzMgWiIvPgogICA8Z2x5cGggdW5pY29kZT0ibyIgaG9yaXotYWR2LXg9IjEwMDYiIGQ9Ik0gNjEwLC0yMCBDIDQ2NiwtMjAgMzQ4LDMyIDI1NSwxMzYgMTYyLDIzOSAxMTUsMzc4IDExNSw1NTEgMTE1LDcyNiAxNjAsODY1IDI1MSw5NjYgMzQxLDEwNjcgNDYzLDExMTggNjE2LDExMTggNzYxLDExMTggODgwLDEwNjYgOTczLDk2MyAxMDY2LDg2MCAxMTEyLDcyMiAxMTEyLDU1MSAxMTEyLDM3NCAxMDY2LDIzNSA5NzUsMTMzIDg4NCwzMSA3NjIsLTIwIDYxMCwtMjAgWiBNIDYxNCwxMzEgQyA4MjEsMTMxIDkyNCwyNzEgOTI0LDU1MSA5MjQsODI4IDgyMCw5NjcgNjEyLDk2NyA0MDYsOTY3IDMwMyw4MjggMzAzLDU1MSAzMDMsMjcxIDQwNywxMzEgNjE0LDEzMSBaIi8+CiAgIDxnbHlwaCB1bmljb2RlPSJuIiBob3Jpei1hZHYteD0iOTAwIiBkPSJNIDg4NywwIEwgODg3LDcwNyBDIDg4Nyw4ODAgODA4LDk2NyA2NDksOTY3IDQ0NCw5NjcgMzQyLDgzNCAzNDIsNTY5IEwgMzQyLDAgMTYwLDAgMTYwLDEwOTggMzA3LDEwOTggMzM0LDk1MCAzNDQsOTUwIEMgNDEzLDEwNjIgNTI1LDExMTggNjgwLDExMTggOTM5LDExMTggMTA2OSw5ODQgMTA2OSw3MTcgTCAxMDY5LDAgODg3LDAgWiIvPgogICA8Z2x5cGggdW5pY29kZT0ibSIgaG9yaXotYWR2LXg9IjEwNjAiIGQ9Ik0gOTc3LDAgTCA5NzcsNzA3IEMgOTc3LDgwNCA5NjgsODcyIDk1MSw5MTAgOTMzLDk0OCA5MDMsOTY3IDg2Miw5NjcgODA0LDk2NyA3NjIsOTM5IDczNiw4ODQgNzA5LDgyOSA2OTYsNzM2IDY5Niw2MDYgTCA2OTYsMCA1MzUsMCA1MzUsNzA3IEMgNTM1LDg4MCA0OTMsOTY3IDQxMCw5NjcgMzU0LDk2NyAzMTQsOTQxIDI5MCw4ODggMjY2LDgzNSAyNTQsNzI4IDI1NCw1NjkgTCAyNTQsMCA5MiwwIDkyLDEwOTggMjE5LDEwOTggMjQ2LDk1MCAyNTYsOTUwIEMgMzAxLDEwNjIgMzY4LDExMTggNDU3LDExMTggNTY2LDExMTggNjM3LDEwNTcgNjcwLDkzNiBMIDY3Niw5MzYgQyA3MjcsMTA1NyA4MDAsMTExOCA4OTUsMTExOCA5ODAsMTExOCAxMDQyLDEwODcgMTA4MSwxMDI2IDExMjAsOTY0IDExMzksODYxIDExMzksNzE3IEwgMTEzOSwwIDk3NywwIFoiLz4KICAgPGdseXBoIHVuaWNvZGU9ImwiIGhvcml6LWFkdi14PSI5MDEiIGQ9Ik0gNTMyLDE0MTMgTCAyNjQsMTQzNCAyNjQsMTU1NiA3MTUsMTU1NiA3MTUsMTMzIDEwNjcsMTMzIDEwNjcsMCAxODgsMCAxODgsMTMzIDUzMiwxMzMgNTMyLDE0MTMgWiIvPgogICA8Z2x5cGggdW5pY29kZT0iaSIgaG9yaXotYWR2LXg9IjkwMSIgZD0iTSA2MzMsMTU1MCBDIDcwNCwxNTUwIDczOSwxNTEyIDczOSwxNDM2IDczOSwxMzk3IDcyOSwxMzY5IDcwOCwxMzUwIDY4NywxMzMxIDY2MiwxMzIxIDYzMywxMzIxIDU2MiwxMzIxIDUyNiwxMzU5IDUyNiwxNDM2IDUyNiwxNTEyIDU2MiwxNTUwIDYzMywxNTUwIFogTSA1NDEsOTU0IEwgMjcyLDk3NSAyNzIsMTA5OCA3MjMsMTA5OCA3MjMsMTMzIDEwNzUsMTMzIDEwNzUsMCAxOTcsMCAxOTcsMTMzIDU0MSwxMzMgNTQxLDk1NCBaIi8+CiAgIDxnbHlwaCB1bmljb2RlPSJoIiBob3Jpei1hZHYteD0iOTAwIiBkPSJNIDg4NywwIEwgODg3LDcwNyBDIDg4Nyw4ODAgODA4LDk2NyA2NDksOTY3IDQ0NCw5NjcgMzQyLDgzNCAzNDIsNTY5IEwgMzQyLDAgMTYwLDAgMTYwLDE1NTYgMzQyLDE1NTYgMzQyLDEwOTQgMzM0LDk1MCAzNDQsOTUwIEMgNDEzLDEwNjIgNTI1LDExMTggNjgwLDExMTggOTM5LDExMTggMTA2OSw5ODQgMTA2OSw3MTcgTCAxMDY5LDAgODg3LDAgWiIvPgogICA8Z2x5cGggdW5pY29kZT0iZiIgaG9yaXotYWR2LXg9Ijk1MyIgZD0iTSAxMDQ0LDk2MSBMIDY1NSw5NjEgNjU1LDAgNDczLDAgNDczLDk2MSAxNTYsOTYxIDE1NiwxMDcxIDQ3MywxMTA0IDQ3MywxMjAwIEMgNDczLDEzMjkgNTAzLDE0MjIgNTYzLDE0ODAgNjIzLDE1MzggNzIzLDE1NjcgODYyLDE1NjcgOTQ4LDE1NjcgMTAzMiwxNTU1IDExMTQsMTUzMiBMIDEwNzMsMTM4OSBDIDEwMDQsMTQwOCA5MzUsMTQxNyA4NjYsMTQxNyA3ODQsMTQxNyA3MjgsMTQwMCA2OTksMTM2NyA2NzAsMTMzNCA2NTUsMTI3OSA2NTUsMTIwMiBMIDY1NSwxMDk4IDEwNDQsMTA5OCAxMDQ0LDk2MSBaIi8+CiAgIDxnbHlwaCB1bmljb2RlPSJlIiBob3Jpei1hZHYteD0iOTU0IiBkPSJNIDEwOTYsNTE0IEwgMzIyLDUxNCBDIDMyNywyNjQgNDQyLDEzOSA2NjYsMTM5IDc5NiwxMzkgOTE5LDE2NCAxMDM2LDIxNSBMIDEwMzYsNTUgQyA5MjUsNSA4MDQsLTIwIDY3MiwtMjAgNTA5LC0yMCAzNzgsMzAgMjgwLDEzMCAxODIsMjI5IDEzMywzNjYgMTMzLDU0MSAxMzMsNzE4IDE3OCw4NTkgMjY5LDk2MyAzNTksMTA2NiA0ODAsMTExOCA2MzEsMTExOCA3NzIsMTExOCA4ODUsMTA3MyA5NzAsOTg0IDEwNTQsODk1IDEwOTYsNzc2IDEwOTYsNjI3IEwgMTA5Niw1MTQgWiBNIDMyNiw2NjIgTCA4OTksNjYyIEMgODk5LDg2NSA4MDgsOTY3IDYyNyw5NjcgNDQ0LDk2NyAzNDMsODY1IDMyNiw2NjIgWiIvPgogICA8Z2x5cGggdW5pY29kZT0iZCIgaG9yaXotYWR2LXg9IjkyNyIgZD0iTSA4OTcsMTQ3IEwgODg5LDE0NyBDIDgxNCwzNiA3MDYsLTIwIDU2NywtMjAgNDMzLC0yMCAzMjgsMzAgMjUyLDEzMCAxNzUsMjI5IDEzNywzNjggMTM3LDU0NyAxMzcsNzI3IDE3NSw4NjcgMjUyLDk2OCAzMjksMTA2OCA0MzQsMTExOCA1NjcsMTExOCA3MDQsMTExOCA4MTIsMTA2NSA4ODksOTU4IEwgOTAxLDk1OCBDIDg5MywxMDQ0IDg4OSwxMDk4IDg4OSwxMTIwIEwgODg5LDE1NTYgMTA3MSwxNTU2IDEwNzEsMCA5MjQsMCA4OTcsMTQ3IFogTSA4ODksNTA2IEwgODg5LDU0NyBDIDg4OSw2OTggODY2LDgwNiA4MjAsODcxIDc3Myw5MzUgNjk5LDk2NyA1OTgsOTY3IDQxNyw5NjcgMzI2LDgyNiAzMjYsNTQ1IDMyNiwyNjkgNDE3LDEzMSA2MDAsMTMxIDcwMSwxMzEgNzc0LDE2MSA4MTksMjIwIDg2MywyNzkgODg2LDM3NCA4ODksNTA2IFoiLz4KICAgPGdseXBoIHVuaWNvZGU9ImIiIGhvcml6LWFkdi14PSI5MjciIGQ9Ik0gMzQwLDEzOSBMIDMyOCwxMzkgMjkxLDAgMTU4LDAgMTU4LDE1NTYgMzQwLDE1NTYgMzQwLDExODAgQyAzNDAsMTEyNiAzMzcsMTA1MSAzMzIsOTU0IEwgMzQwLDk1NCBDIDQxMSwxMDYzIDUxOSwxMTE4IDY2MiwxMTE4IDc5NiwxMTE4IDkwMSwxMDY4IDk3OCw5NjkgMTA1NCw4NjkgMTA5Miw3MzAgMTA5Miw1NTEgMTA5MiwzNzEgMTA1NCwyMzEgOTc3LDEzMSA5MDAsMzAgNzk1LC0yMCA2NjIsLTIwIDUyNCwtMjAgNDE3LDMzIDM0MCwxMzkgWiBNIDM0MCw1NTEgQyAzNDAsNDAwIDM2MywyOTIgNDEwLDIyOCA0NTYsMTYzIDUzMCwxMzEgNjMxLDEzMSA4MTIsMTMxIDkwMywyNzIgOTAzLDU1MyA5MDMsODI5IDgxMiw5NjcgNjI5LDk2NyA1MjYsOTY3IDQ1Miw5MzYgNDA3LDg3MyAzNjIsODEwIDM0MCw3MDMgMzQwLDU1MSBaIi8+CiAgIDxnbHlwaCB1bmljb2RlPSJhIiBob3Jpei1hZHYteD0iODc0IiBkPSJNIDg5NSwwIEwgODU4LDE1MiA4NTAsMTUyIEMgNzk5LDg3IDc0Niw0MyA2OTIsMTggNjM4LC03IDU2OCwtMjAgNDgzLC0yMCAzNzQsLTIwIDI4OSw5IDIyOCw2NyAxNjYsMTI2IDEzNSwyMDcgMTM1LDMxMiAxMzUsNTM3IDMwNSw2NTAgNjQ1LDY1MCBMIDg0OCw2NTAgODQ4LDcyMiBDIDg0OCw4ODUgNzY3LDk2NyA2MDQsOTY3IDUwNiw5NjcgMzk3LDk0MCAyNzYsODg1IEwgMjEzLDEwMjIgQyAzNDQsMTA4NiA0NzEsMTExOCA1OTYsMTExOCA3NDcsMTExOCA4NTcsMTA4OSA5MjUsMTAzMSA5OTIsOTczIDEwMjYsODgwIDEwMjYsNzUyIEwgMTAyNiwwIDg5NSwwIFogTSA4NDYsNTI5IEwgNjg0LDUyOSBDIDU1Myw1MjkgNDYxLDUxMSA0MDYsNDc1IDM1MSw0MzggMzI0LDM4MyAzMjQsMzA4IDMyNCwxODcgMzkxLDEyNyA1MjQsMTI3IDYyMiwxMjcgNzAwLDE1NCA3NTksMjA3IDgxNywyNjAgODQ2LDMzNSA4NDYsNDMyIEwgODQ2LDUyOSBaIi8+CiAgIDxnbHlwaCB1bmljb2RlPSJXIiBob3Jpei1hZHYteD0iMTIxOCIgZD0iTSA1MjgsMTAwOCBMIDcwNSwxMDA4IDg1MCw0ODcgQyA4OTEsMzQxIDkxNSwyMzkgOTIyLDE4MCA5MjMsMjE1IDk0NSw0MjIgOTg3LDc5OSBMIDEwNTcsMTQ2MiAxMjI3LDE0NjIgMTA0MCwwIDg1MCwwIDY4Miw1ODAgQyA2NTUsNjcyIDYzMyw3NjYgNjE2LDg2MiA1OTUsNzQ3IDU3Myw2NTIgNTUxLDU3OCBMIDM5NSwwIDIwNSwwIDIsMTQ2MiAxNzIsMTQ2MiAyNjAsNzk5IEMgMjc1LDY4MiAyODksNTU2IDMwMCw0MjEgMzExLDI4NiAzMTcsMjA2IDMxNywxODAgMzMzLDI4MSAzNTYsMzg1IDM4Nyw0OTIgTCA1MjgsMTAwOCBaIi8+CiAgIDxnbHlwaCB1bmljb2RlPSJUIiBob3Jpei1hZHYteD0iMTAzMyIgZD0iTSA3MDcsMCBMIDUyMCwwIDUyMCwxMjk4IDEwMiwxMjk4IDEwMiwxNDYyIDExMjQsMTQ2MiAxMTI0LDEyOTggNzA3LDEyOTggNzA3LDAgWiIvPgogICA8Z2x5cGggdW5pY29kZT0iTSIgaG9yaXotYWR2LXg9IjEwMDYiIGQ9Ik0gNTMyLDAgTCAyNTQsMTI4MCAyNDYsMTI4MCBDIDI1OCwxMTAzIDI2NCw5NjcgMjY0LDg3NCBMIDI2NCwwIDExMywwIDExMywxNDYyIDM2MCwxNDYyIDYwOCwyNzAgNjE0LDI3MCA4NjQsMTQ2MiAxMTE2LDE0NjIgMTExNiwwIDk2MywwIDk2Myw4ODcgQyA5NjMsOTU1IDk2OCwxMDg1IDk3NywxMjc4IEwgOTY5LDEyNzggNjg2LDAgNTMyLDAgWiIvPgogICA8Z2x5cGggdW5pY29kZT0iQyIgaG9yaXotYWR2LXg9IjEwMzMiIGQ9Ik0gMTEyNCwyMDEgTCAxMTI0LDM5IEMgMTAyNywwIDkwNywtMjAgNzY2LC0yMCA1NjAsLTIwIDQwMiw0NSAyOTMsMTc2IDE4NCwzMDcgMTI5LDQ5MiAxMjksNzMzIDEyOSw5NjQgMTg5LDExNDYgMzA4LDEyODEgNDI3LDE0MTYgNTkwLDE0ODMgNzk3LDE0ODMgOTQ0LDE0ODMgMTA3MSwxNDU0IDExODAsMTM5NyBMIDExMDIsMTI0MSBDIDk5OSwxMjkzIDg5OCwxMzE5IDc5NywxMzE5IDY1NCwxMzE5IDUzOSwxMjY2IDQ1NCwxMTYxIDM2OSwxMDU1IDMyNiw5MTIgMzI2LDczMSAzMjYsNTQwIDM2NiwzOTQgNDQ2LDI5NCA1MjYsMTkzIDY0MywxNDMgNzk3LDE0MyA4ODQsMTQzIDk5MywxNjIgMTEyNCwyMDEgWiIvPgogICA8Z2x5cGggdW5pY29kZT0iQiIgaG9yaXotYWR2LXg9IjEwMDciIGQ9Ik0gMTM1LDE0NjIgTCA1NzUsMTQ2MiBDIDc1OCwxNDYyIDg5MCwxNDMzIDk3MywxMzc1IDEwNTUsMTMxNiAxMDk2LDEyMjIgMTA5NiwxMDkyIDEwOTYsMTAwNyAxMDcwLDkzNiAxMDE4LDg3OSA5NjUsODIyIDg5NCw3ODggODA1LDc3NiBMIDgwNSw3NjYgQyAxMDI2LDczMCAxMTM3LDYxNiAxMTM3LDQyNCAxMTM3LDI5MiAxMDk1LDE4OCAxMDEwLDExMyA5MjUsMzggODA5LDAgNjYyLDAgTCAxMzUsMCAxMzUsMTQ2MiBaIE0gMzIyLDg0MiBMIDYwNiw4NDIgQyA3MTAsODQyIDc4Niw4NjAgODM0LDg5NyA4ODEsOTM0IDkwNSw5OTQgOTA1LDEwNzkgOTA1LDExNTkgODgwLDEyMTYgODI5LDEyNTEgNzc4LDEyODYgNjk3LDEzMDMgNTg2LDEzMDMgTCAzMjIsMTMwMyAzMjIsODQyIFogTSAzMjIsNjg2IEwgMzIyLDE1OCA2MjksMTU4IEMgODM2LDE1OCA5NDAsMjQ5IDk0MCw0MzIgOTQwLDYwMSA4MzIsNjg2IDYxNiw2ODYgTCAzMjIsNjg2IFoiLz4KICAgPGdseXBoIHVuaWNvZGU9IiwiIGhvcml6LWFkdi14PSIzNDUiIGQ9Ik0gNzcwLDI2MiBMIDc4NiwyMzggQyA3NDgsODkgNjgzLC04NyA1OTIsLTI4OSBMIDQ0MCwtMjg5IEMgNDkxLC03NCA1MjgsMTEwIDU1MSwyNjIgTCA3NzAsMjYyIFoiLz4KICAgPGdseXBoIHVuaWNvZGU9IiAiIGhvcml6LWFkdi14PSIxMjE3Ii8+CiAgPC9mb250PgogPC9kZWZzPgogPGRlZnM+CiAgPGZvbnQgaWQ9IkVtYmVkZGVkRm9udF8yIiBob3Jpei1hZHYteD0iMjA0OCI+CiAgIDxmb250LWZhY2UgZm9udC1mYW1pbHk9IkxpYmVyYXRpb24gU2FucyBlbWJlZGRlZCIgdW5pdHMtcGVyLWVtPSIyMDQ4IiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zdHlsZT0ibm9ybWFsIiBhc2NlbnQ9IjE4NTIiIGRlc2NlbnQ9IjQyMyIvPgogICA8bWlzc2luZy1nbHlwaCBob3Jpei1hZHYteD0iMjA0OCIgZD0iTSAwLDAgTCAyMDQ3LDAgMjA0NywyMDQ3IDAsMjA0NyAwLDAgWiIvPgogICA8Z2x5cGggdW5pY29kZT0iPyIgaG9yaXotYWR2LXg9IjEwMzMiIGQ9Ik0gMTEzMywxMDI2IEMgMTEzMyw5ODIgMTEyNyw5NDMgMTExNiw5MTAgMTEwNCw4NzcgMTA4OCw4NDcgMTA2OSw4MjEgMTA1MCw3OTQgMTAyOCw3NzEgMTAwMyw3NTAgOTc4LDcyOSA5NTMsNzA5IDkyNyw2OTAgOTAxLDY3MSA4NzYsNjUzIDg1MSw2MzUgODI2LDYxNyA4MDMsNTk4IDc4Myw1NzggNzYzLDU1NyA3NDcsNTM1IDczNCw1MTEgNzIxLDQ4NiA3MTQsNDU4IDcxMyw0MjYgTCA0NDYsNDI2IEMgNDQ5LDQ4MyA0NjIsNTMxIDQ4Myw1NzIgNTA0LDYxMiA1MjksNjQ3IDU1OSw2NzcgNTg5LDcwNyA2MjEsNzM0IDY1NSw3NTggNjg5LDc4MSA3MjEsODA1IDc1MCw4MzAgNzc5LDg1NSA4MDMsODgyIDgyMiw5MTEgODQxLDk0MCA4NTAsOTc0IDg1MCwxMDE0IDg1MCwxMDczIDgzMSwxMTE5IDc5MywxMTUzIDc1NCwxMTg3IDcwMCwxMjA0IDYyOSwxMjA0IDU5NSwxMjA0IDU2NCwxMTk5IDUzNSwxMTg5IDUwNiwxMTc5IDQ4MSwxMTY1IDQ2MCwxMTQ3IDQzOCwxMTI5IDQyMCwxMTA2IDQwNiwxMDgxIDM5MiwxMDU1IDM4MywxMDI2IDM3OSw5OTUgTCA5NCw5OTUgQyAxMDIsMTA1NSAxMTksMTExMiAxNDQsMTE2NCAxNjksMTIxNyAyMDMsMTI2MyAyNDYsMTMwMiAyODksMTM0MSAzNDMsMTM3MyA0MDYsMTM5NiA0NjksMTQxOSA1NDIsMTQzMCA2MjUsMTQzMCA3MDUsMTQzMCA3NzYsMTQyMSA4MzksMTQwMiA5MDIsMTM4MyA5NTUsMTM1NyA5OTksMTMyMiAxMDQyLDEyODcgMTA3NiwxMjQ0IDEwOTksMTE5NCAxMTIyLDExNDQgMTEzMywxMDg4IDExMzMsMTAyNiBaIE0gNDM4LDAgTCA0MzgsMjcwIDcyNywyNzAgNzI3LDAgNDM4LDAgWiIvPgogIDwvZm9udD4KIDwvZGVmcz4KIDxkZWZzIGNsYXNzPSJUZXh0U2hhcGVJbmRleCI+CiAgPGcgb29vOnNsaWRlPSJpZDEiIG9vbzppZC1saXN0PSJpZDMgaWQ0IGlkNSBpZDYgaWQ3IGlkOCBpZDkgaWQxMCIvPgogPC9kZWZzPgogPGRlZnMgY2xhc3M9IkVtYmVkZGVkQnVsbGV0Q2hhcnMiPgogIDxnIGlkPSJidWxsZXQtY2hhci10ZW1wbGF0ZSg1NzM1NikiIHRyYW5zZm9ybT0ic2NhbGUoMC4wMDA0ODgyODEyNSwtMC4wMDA0ODgyODEyNSkiPgogICA8cGF0aCBkPSJNIDU4MCwxMTQxIEwgMTE2Myw1NzEgNTgwLDAgLTQsNTcxIDU4MCwxMTQxIFoiLz4KICA8L2c+CiAgPGcgaWQ9ImJ1bGxldC1jaGFyLXRlbXBsYXRlKDU3MzU0KSIgdHJhbnNmb3JtPSJzY2FsZSgwLjAwMDQ4ODI4MTI1LC0wLjAwMDQ4ODI4MTI1KSI+CiAgIDxwYXRoIGQ9Ik0gOCwxMTI4IEwgMTEzNywxMTI4IDExMzcsMCA4LDAgOCwxMTI4IFoiLz4KICA8L2c+CiAgPGcgaWQ9ImJ1bGxldC1jaGFyLXRlbXBsYXRlKDEwMTQ2KSIgdHJhbnNmb3JtPSJzY2FsZSgwLjAwMDQ4ODI4MTI1LC0wLjAwMDQ4ODI4MTI1KSI+CiAgIDxwYXRoIGQ9Ik0gMTc0LDAgTCA2MDIsNzM5IDE3NCwxNDgxIDE0NTYsNzM5IDE3NCwwIFogTSAxMzU4LDczOSBMIDMwOSwxMzQ2IDY1OSw3MzkgMTM1OCw3MzkgWiIvPgogIDwvZz4KICA8ZyBpZD0iYnVsbGV0LWNoYXItdGVtcGxhdGUoMTAxMzIpIiB0cmFuc2Zvcm09InNjYWxlKDAuMDAwNDg4MjgxMjUsLTAuMDAwNDg4MjgxMjUpIj4KICAgPHBhdGggZD0iTSAyMDE1LDczOSBMIDEyNzYsMCA3MTcsMCAxMjYwLDU0MyAxNzQsNTQzIDE3NCw5MzYgMTI2MCw5MzYgNzE3LDE0ODEgMTI3NCwxNDgxIDIwMTUsNzM5IFoiLz4KICA8L2c+CiAgPGcgaWQ9ImJ1bGxldC1jaGFyLXRlbXBsYXRlKDEwMDA3KSIgdHJhbnNmb3JtPSJzY2FsZSgwLjAwMDQ4ODI4MTI1LC0wLjAwMDQ4ODI4MTI1KSI+CiAgIDxwYXRoIGQ9Ik0gMCwtMiBDIC03LDE0IC0xNiwyNyAtMjUsMzcgTCAzNTYsNTY3IEMgMjYyLDgyMyAyMTUsOTUyIDIxNSw5NTQgMjE1LDk3OSAyMjgsOTkyIDI1NSw5OTIgMjY0LDk5MiAyNzYsOTkwIDI4OSw5ODcgMzEwLDk5MSAzMzEsOTk5IDM1NCwxMDEyIEwgMzgxLDk5OSA0OTIsNzQ4IDc3MiwxMDQ5IDgzNiwxMDI0IDg2MCwxMDQ5IEMgODgxLDEwMzkgOTAxLDEwMjUgOTIyLDEwMDYgODg2LDkzNyA4MzUsODYzIDc3MCw3ODQgNzY5LDc4MyA3MTAsNzE2IDU5NCw1ODQgTCA3NzQsMjIzIEMgNzc0LDE5NiA3NTMsMTY4IDcxMSwxMzkgTCA3MjcsMTE5IEMgNzE3LDkwIDY5OSw3NiA2NzIsNzYgNjQxLDc2IDU3MCwxNzggNDU3LDM4MSBMIDE2NCwtNzYgQyAxNDIsLTExMCAxMTEsLTEyNyA3MiwtMTI3IDMwLC0xMjcgOSwtMTEwIDgsLTc2IDEsLTY3IC0yLC01MiAtMiwtMzIgLTIsLTIzIC0xLC0xMyAwLC0yIFoiLz4KICA8L2c+CiAgPGcgaWQ9ImJ1bGxldC1jaGFyLXRlbXBsYXRlKDEwMDA0KSIgdHJhbnNmb3JtPSJzY2FsZSgwLjAwMDQ4ODI4MTI1LC0wLjAwMDQ4ODI4MTI1KSI+CiAgIDxwYXRoIGQ9Ik0gMjg1LC0zMyBDIDE4MiwtMzMgMTExLDMwIDc0LDE1NiA1MiwyMjggNDEsMzMzIDQxLDQ3MSA0MSw1NDkgNTUsNjE2IDgyLDY3MiAxMTYsNzQzIDE2OSw3NzggMjQwLDc3OCAyOTMsNzc4IDMyOCw3NDcgMzQ2LDY4NCBMIDM2OSw1MDggQyAzNzcsNDQ0IDM5Nyw0MTEgNDI4LDQxMCBMIDExNjMsMTExNiBDIDExNzQsMTEyNyAxMTk2LDExMzMgMTIyOSwxMTMzIDEyNzEsMTEzMyAxMjkyLDExMTggMTI5MiwxMDg3IEwgMTI5Miw5NjUgQyAxMjkyLDkyOSAxMjgyLDkwMSAxMjYyLDg4MSBMIDQ0Miw0NyBDIDM5MCwtNiAzMzgsLTMzIDI4NSwtMzMgWiIvPgogIDwvZz4KICA8ZyBpZD0iYnVsbGV0LWNoYXItdGVtcGxhdGUoOTY3OSkiIHRyYW5zZm9ybT0ic2NhbGUoMC4wMDA0ODgyODEyNSwtMC4wMDA0ODgyODEyNSkiPgogICA8cGF0aCBkPSJNIDgxMywwIEMgNjMyLDAgNDg5LDU0IDM4MywxNjEgMjc2LDI2OCAyMjMsNDExIDIyMyw1OTIgMjIzLDc3MyAyNzYsOTE2IDM4MywxMDIzIDQ4OSwxMTMwIDYzMiwxMTg0IDgxMywxMTg0IDk5MiwxMTg0IDExMzYsMTEzMCAxMjQ1LDEwMjMgMTM1Myw5MTYgMTQwNyw3NzIgMTQwNyw1OTIgMTQwNyw0MTIgMTM1MywyNjggMTI0NSwxNjEgMTEzNiw1NCA5OTIsMCA4MTMsMCBaIi8+CiAgPC9nPgogIDxnIGlkPSJidWxsZXQtY2hhci10ZW1wbGF0ZSg4MjI2KSIgdHJhbnNmb3JtPSJzY2FsZSgwLjAwMDQ4ODI4MTI1LC0wLjAwMDQ4ODI4MTI1KSI+CiAgIDxwYXRoIGQ9Ik0gMzQ2LDQ1NyBDIDI3Myw0NTcgMjA5LDQ4MyAxNTUsNTM1IDEwMSw1ODYgNzQsNjQ5IDc0LDcyMyA3NCw3OTYgMTAxLDg1OSAxNTUsOTExIDIwOSw5NjMgMjczLDk4OSAzNDYsOTg5IDQxOSw5ODkgNDgwLDk2MyA1MzEsOTEwIDU4Miw4NTkgNjA4LDc5NiA2MDgsNzIzIDYwOCw2NDggNTgzLDU4NiA1MzIsNTM1IDQ4Miw0ODMgNDIwLDQ1NyAzNDYsNDU3IFoiLz4KICA8L2c+CiAgPGcgaWQ9ImJ1bGxldC1jaGFyLXRlbXBsYXRlKDgyMTEpIiB0cmFuc2Zvcm09InNjYWxlKDAuMDAwNDg4MjgxMjUsLTAuMDAwNDg4MjgxMjUpIj4KICAgPHBhdGggZD0iTSAtNCw0NTkgTCAxMTM1LDQ1OSAxMTM1LDYwNiAtNCw2MDYgLTQsNDU5IFoiLz4KICA8L2c+CiA8L2RlZnM+CiA8ZGVmcyBjbGFzcz0iVGV4dEVtYmVkZGVkQml0bWFwcyIvPgogPGc+CiAgPGcgaWQ9ImlkMiIgY2xhc3M9Ik1hc3Rlcl9TbGlkZSI+CiAgIDxnIGlkPSJiZy1pZDIiIGNsYXNzPSJCYWNrZ3JvdW5kIi8+CiAgIDxnIGlkPSJiby1pZDIiIGNsYXNzPSJCYWNrZ3JvdW5kT2JqZWN0cyIvPgogIDwvZz4KIDwvZz4KIDxnIGNsYXNzPSJTbGlkZUdyb3VwIj4KICA8Zz4KICAgPGcgaWQ9ImlkMSIgY2xhc3M9IlNsaWRlIiBjbGlwLXBhdGg9InVybCgjcHJlc2VudGF0aW9uX2NsaXBfcGF0aCkiPgogICAgPGcgY2xhc3M9IlBhZ2UiPgogICAgIDxnIGNsYXNzPSJjb20uc3VuLnN0YXIuZHJhd2luZy5UZXh0U2hhcGUiPgogICAgICA8ZyBpZD0iaWQzIj4KICAgICAgIDxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiKDAsMCwwKSIgc3Ryb2tlLXdpZHRoPSI1MSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZD0iTSA3NjIxLDM2MjMgTCA0Nzc1LDM2MjMgNDc3NSw4NjYgMTA0NjYsODY2IDEwNDY2LDM2MjMgNzYyMSwzNjIzIFoiLz4KICAgICAgIDx0ZXh0IGNsYXNzPSJUZXh0U2hhcGUiPjx0c3BhbiBjbGFzcz0iVGV4dFBhcmFncmFwaCIgZm9udC1mYW1pbHk9IkRyb2lkIFNhbnMgTW9ubywgbW9ub3NwYWNlIiBmb250LXNpemU9IjUyOXB4IiBmb250LXdlaWdodD0iNDAwIj48dHNwYW4gY2xhc3M9IlRleHRQb3NpdGlvbiIgeD0iNTA1MCIgeT0iMTUwNyI+PHRzcGFuIGZpbGw9InJnYigwLDAsMCkiIHN0cm9rZT0ibm9uZSI+Q29sZCBhbmQgZHJ5LCBidTwvdHNwYW4+PC90c3Bhbj48L3RzcGFuPjx0c3BhbiBjbGFzcz0iVGV4dFBhcmFncmFwaCIgZm9udC1mYW1pbHk9IkRyb2lkIFNhbnMgTW9ubywgbW9ub3NwYWNlIiBmb250LXNpemU9IjUyOXB4IiBmb250LXdlaWdodD0iNDAwIj48dHNwYW4gY2xhc3M9IlRleHRQb3NpdGlvbiIgeD0iNTA1MCIgeT0iMjEyMSI+PHRzcGFuIGZpbGw9InJnYigwLDAsMCkiIHN0cm9rZT0ibm9uZSI+VGhlIHR3byBtb29ucyBtYTwvdHNwYW4+PC90c3Bhbj48L3RzcGFuPjx0c3BhbiBjbGFzcz0iVGV4dFBhcmFncmFwaCIgZm9udC1mYW1pbHk9IkRyb2lkIFNhbnMgTW9ubywgbW9ub3NwYWNlIiBmb250LXNpemU9IjUyOXB4IiBmb250LXdlaWdodD0iNDAwIj48dHNwYW4gY2xhc3M9IlRleHRQb3NpdGlvbiIgeD0iNTA1MCIgeT0iMjczNSI+PHRzcGFuIGZpbGw9InJnYigwLDAsMCkiIHN0cm9rZT0ibm9uZSI+QnV0IHRoZSBNdW1teSB3aTwvdHNwYW4+PC90c3Bhbj48L3RzcGFuPjwvdGV4dD4KICAgICAgPC9nPgogICAgIDwvZz4KICAgICA8ZyBjbGFzcz0iR3JvdXAiPgogICAgICA8ZyBjbGFzcz0iY29tLnN1bi5zdGFyLmRyYXdpbmcuVGV4dFNoYXBlIj4KICAgICAgIDxnIGlkPSJpZDQiPgogICAgICAgIDxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiKDAsMCwwKSIgc3Ryb2tlLXdpZHRoPSI1MSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZD0iTSAzMzQyLDkxMjQgTCA0OTUsOTEyNCA0OTUsNjM2NyA2MTg5LDYzNjcgNjE4OSw5MTI0IDMzNDIsOTEyNCBaIi8+CiAgICAgICAgPHRleHQgY2xhc3M9IlRleHRTaGFwZSI+PHRzcGFuIGNsYXNzPSJUZXh0UGFyYWdyYXBoIiBmb250LWZhbWlseT0iRHJvaWQgU2FucyBNb25vLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iNTI5cHgiIGZvbnQtd2VpZ2h0PSI0MDAiPjx0c3BhbiBjbGFzcz0iVGV4dFBvc2l0aW9uIiB4PSI3NzAiIHk9IjcwMDgiPjx0c3BhbiBmaWxsPSJyZ2IoMCwwLDApIiBzdHJva2U9Im5vbmUiPkNvbGQgYW5kIGRyeSwgYnU8L3RzcGFuPjwvdHNwYW4+PC90c3Bhbj48dHNwYW4gY2xhc3M9IlRleHRQYXJhZ3JhcGgiIGZvbnQtZmFtaWx5PSJEcm9pZCBTYW5zIE1vbm8sIG1vbm9zcGFjZSIgZm9udC1zaXplPSI1MjlweCIgZm9udC13ZWlnaHQ9IjQwMCI+PHRzcGFuIGNsYXNzPSJUZXh0UG9zaXRpb24iIHg9Ijc3MCIgeT0iNzYyMiI+PHRzcGFuIGZpbGw9InJnYigwLDAsMCkiIHN0cm9rZT0ibm9uZSI+VGhlIHR3byBtb29ucyBtYTwvdHNwYW4+PC90c3Bhbj48L3RzcGFuPjx0c3BhbiBjbGFzcz0iVGV4dFBhcmFncmFwaCIgZm9udC1mYW1pbHk9IkRyb2lkIFNhbnMgTW9ubywgbW9ub3NwYWNlIiBmb250LXNpemU9IjUyOXB4IiBmb250LXdlaWdodD0iNDAwIj48dHNwYW4gY2xhc3M9IlRleHRQb3NpdGlvbiIgeD0iNzcwIiB5PSI4MjM2Ij48dHNwYW4gZmlsbD0icmdiKDAsMCwwKSIgc3Ryb2tlPSJub25lIj5CdXQgdGhlIE11bW15IHdpPC90c3Bhbj48L3RzcGFuPjwvdHNwYW4+PHRzcGFuIGNsYXNzPSJUZXh0UGFyYWdyYXBoIiBmb250LWZhbWlseT0iRHJvaWQgU2FucyBNb25vLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iNTI5cHgiIGZvbnQtd2VpZ2h0PSI0MDAiPjx0c3BhbiBjbGFzcz0iVGV4dFBvc2l0aW9uIiB4PSI3NzAiIHk9Ijg4NTAiPjx0c3BhbiBmaWxsPSJyZ2IoMCwwLDI1NSkiIHN0cm9rZT0ibm9uZSI+VGhpcyBsaW5lIGFkZGVkIDwvdHNwYW4+PC90c3Bhbj48L3RzcGFuPjwvdGV4dD4KICAgICAgIDwvZz4KICAgICAgPC9nPgogICAgICA8ZyBjbGFzcz0iY29tLnN1bi5zdGFyLmRyYXdpbmcuVGV4dFNoYXBlIj4KICAgICAgIDxnIGlkPSJpZDUiPgogICAgICAgIDxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiKDAsMCwwKSIgc3Ryb2tlLXdpZHRoPSI1MSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZD0iTSAxMTg5OCw5MTI0IEwgOTA1MSw5MTI0IDkwNTEsNjM2NyAxNDc0NSw2MzY3IDE0NzQ1LDkxMjQgMTE4OTgsOTEyNCBaIi8+CiAgICAgICAgPHRleHQgY2xhc3M9IlRleHRTaGFwZSI+PHRzcGFuIGNsYXNzPSJUZXh0UGFyYWdyYXBoIiBmb250LWZhbWlseT0iRHJvaWQgU2FucyBNb25vLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iNTI5cHgiIGZvbnQtd2VpZ2h0PSI0MDAiPjx0c3BhbiBjbGFzcz0iVGV4dFBvc2l0aW9uIiB4PSI5MzI2IiB5PSI3MDA4Ij48dHNwYW4gZmlsbD0icmdiKDAsMCwwKSIgc3Ryb2tlPSJub25lIj5Db2xkIGFuZCBkcnksIGJ1PC90c3Bhbj48L3RzcGFuPjwvdHNwYW4+PHRzcGFuIGNsYXNzPSJUZXh0UGFyYWdyYXBoIiBmb250LWZhbWlseT0iRHJvaWQgU2FucyBNb25vLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iNTI5cHgiIGZvbnQtd2VpZ2h0PSI0MDAiPjx0c3BhbiBjbGFzcz0iVGV4dFBvc2l0aW9uIiB4PSI5MzI2IiB5PSI3NjIyIj48dHNwYW4gZmlsbD0icmdiKDAsMCwwKSIgc3Ryb2tlPSJub25lIj5UaGUgdHdvIG1vb25zIG1hPC90c3Bhbj48L3RzcGFuPjwvdHNwYW4+PHRzcGFuIGNsYXNzPSJUZXh0UGFyYWdyYXBoIiBmb250LWZhbWlseT0iRHJvaWQgU2FucyBNb25vLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iNTI5cHgiIGZvbnQtd2VpZ2h0PSI0MDAiPjx0c3BhbiBjbGFzcz0iVGV4dFBvc2l0aW9uIiB4PSI5MzI2IiB5PSI4MjM2Ij48dHNwYW4gZmlsbD0icmdiKDAsMCwwKSIgc3Ryb2tlPSJub25lIj5CdXQgdGhlIE11bW15IHdpPC90c3Bhbj48L3RzcGFuPjwvdHNwYW4+PHRzcGFuIGNsYXNzPSJUZXh0UGFyYWdyYXBoIiBmb250LWZhbWlseT0iRHJvaWQgU2FucyBNb25vLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iNTI5cHgiIGZvbnQtd2VpZ2h0PSI0MDAiPjx0c3BhbiBjbGFzcz0iVGV4dFBvc2l0aW9uIiB4PSI5MzI2IiB5PSI4ODUwIj48dHNwYW4gZmlsbD0icmdiKDAsMCwyNTUpIiBzdHJva2U9Im5vbmUiPldlIGFkZGVkIGEgZGlmZmU8L3RzcGFuPjwvdHNwYW4+PC90c3Bhbj48L3RleHQ+CiAgICAgICA8L2c+CiAgICAgIDwvZz4KICAgICA8L2c+CiAgICAgPGcgY2xhc3M9Ikdyb3VwIj4KICAgICAgPGcgY2xhc3M9ImNvbS5zdW4uc3Rhci5kcmF3aW5nLkN1c3RvbVNoYXBlIj4KICAgICAgIDxnIGlkPSJpZDYiPgogICAgICAgIDxwYXRoIGZpbGw9InJnYigxMTQsMTU5LDIwNykiIHN0cm9rZT0ibm9uZSIgZD0iTSA1MzE2LDkxMzcgTCA2Mjc3LDExMDcxIDY0OTQsMTA5NjMgNjM4MSwxMTgyMyA1NjI2LDExMzk0IDU4NDQsMTEyODYgNDg4Miw5MzUyIDUzMTYsOTEzNyBaIE0gNTUzMiw5MDI5IEwgNTUzMiw5MDI5IFogTSA1OTQ3LDEyMDM5IEwgNTk0NywxMjAzOSBaIi8+CiAgICAgICAgPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2IoNTIsMTAxLDE2NCkiIGQ9Ik0gNTMxNiw5MTM3IEwgNjI3NywxMTA3MSA2NDk0LDEwOTYzIDYzODEsMTE4MjMgNTYyNiwxMTM5NCA1ODQ0LDExMjg2IDQ4ODIsOTM1MiA1MzE2LDkxMzcgWiIvPgogICAgICAgIDxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiKDUyLDEwMSwxNjQpIiBkPSJNIDU1MzIsOTAyOSBMIDU1MzIsOTAyOSBaIi8+CiAgICAgICAgPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2IoNTIsMTAxLDE2NCkiIGQ9Ik0gNTk0NywxMjAzOSBMIDU5NDcsMTIwMzkgWiIvPgogICAgICAgPC9nPgogICAgICA8L2c+CiAgICAgIDxnIGNsYXNzPSJjb20uc3VuLnN0YXIuZHJhd2luZy5DdXN0b21TaGFwZSI+CiAgICAgICA8ZyBpZD0iaWQ3Ij4KICAgICAgICA8cGF0aCBmaWxsPSJyZ2IoMTE0LDE1OSwyMDcpIiBzdHJva2U9Im5vbmUiIGQ9Ik0gOTkyNCw5MTM4IEwgODk2MSwxMTA3MiA4NzQ1LDEwOTY0IDg4NTcsMTE4MjQgOTYxMiwxMTM5NSA5Mzk1LDExMjg3IDEwMzU4LDkzNTQgOTkyNCw5MTM4IFogTSA5NzA4LDkwMzEgTCA5NzA4LDkwMzEgWiBNIDkyOTEsMTIwNDAgTCA5MjkxLDEyMDQwIFoiLz4KICAgICAgICA8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9InJnYig1MiwxMDEsMTY0KSIgZD0iTSA5OTI0LDkxMzggTCA4OTYxLDExMDcyIDg3NDUsMTA5NjQgODg1NywxMTgyNCA5NjEyLDExMzk1IDkzOTUsMTEyODcgMTAzNTgsOTM1NCA5OTI0LDkxMzggWiIvPgogICAgICAgIDxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiKDUyLDEwMSwxNjQpIiBkPSJNIDk3MDgsOTAzMSBMIDk3MDgsOTAzMSBaIi8+CiAgICAgICAgPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2IoNTIsMTAxLDE2NCkiIGQ9Ik0gOTI5MSwxMjA0MCBMIDkyOTEsMTIwNDAgWiIvPgogICAgICAgPC9nPgogICAgICA8L2c+CiAgICAgPC9nPgogICAgIDxnIGNsYXNzPSJHcm91cCI+CiAgICAgIDxnIGNsYXNzPSJjb20uc3VuLnN0YXIuZHJhd2luZy5DdXN0b21TaGFwZSI+CiAgICAgICA8ZyBpZD0iaWQ4Ij4KICAgICAgICA8cGF0aCBmaWxsPSJyZ2IoMTE0LDE1OSwyMDcpIiBzdHJva2U9Im5vbmUiIGQ9Ik0gNTk1MSwzNjA2IEwgNDk4OSw1NTM3IDQ3NzIsNTQzMCA0ODg1LDYyOTAgNTY0MSw1ODYxIDU0MjMsNTc1MyA2Mzg1LDM4MjIgNTk1MSwzNjA2IFogTSA1NzM0LDM0OTggTCA1NzM0LDM0OTggWiBNIDUzMjAsNjUwNiBMIDUzMjAsNjUwNiBaIi8+CiAgICAgICAgPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2IoNTIsMTAxLDE2NCkiIGQ9Ik0gNTk1MSwzNjA2IEwgNDk4OSw1NTM3IDQ3NzIsNTQzMCA0ODg1LDYyOTAgNTY0MSw1ODYxIDU0MjMsNTc1MyA2Mzg1LDM4MjIgNTk1MSwzNjA2IFoiLz4KICAgICAgICA8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9InJnYig1MiwxMDEsMTY0KSIgZD0iTSA1NzM0LDM0OTggTCA1NzM0LDM0OTggWiIvPgogICAgICAgIDxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiKDUyLDEwMSwxNjQpIiBkPSJNIDUzMjAsNjUwNiBMIDUzMjAsNjUwNiBaIi8+CiAgICAgICA8L2c+CiAgICAgIDwvZz4KICAgICAgPGcgY2xhc3M9ImNvbS5zdW4uc3Rhci5kcmF3aW5nLkN1c3RvbVNoYXBlIj4KICAgICAgIDxnIGlkPSJpZDkiPgogICAgICAgIDxwYXRoIGZpbGw9InJnYigxMTQsMTU5LDIwNykiIHN0cm9rZT0ibm9uZSIgZD0iTSA5MjkyLDM2MDUgTCAxMDI1Miw1NTM5IDEwNDY5LDU0MzIgMTAzNTUsNjI5MiA5NjAyLDU4NjIgOTgxOCw1NzU1IDg4NTgsMzgyMSA5MjkyLDM2MDUgWiBNIDk1MDksMzQ5OCBMIDk1MDksMzQ5OCBaIE0gOTkyMiw2NTA3IEwgOTkyMiw2NTA3IFoiLz4KICAgICAgICA8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9InJnYig1MiwxMDEsMTY0KSIgZD0iTSA5MjkyLDM2MDUgTCAxMDI1Miw1NTM5IDEwNDY5LDU0MzIgMTAzNTUsNjI5MiA5NjAyLDU4NjIgOTgxOCw1NzU1IDg4NTgsMzgyMSA5MjkyLDM2MDUgWiIvPgogICAgICAgIDxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiKDUyLDEwMSwxNjQpIiBkPSJNIDk1MDksMzQ5OCBMIDk1MDksMzQ5OCBaIi8+CiAgICAgICAgPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2IoNTIsMTAxLDE2NCkiIGQ9Ik0gOTkyMiw2NTA3IEwgOTkyMiw2NTA3IFoiLz4KICAgICAgIDwvZz4KICAgICAgPC9nPgogICAgIDwvZz4KICAgICA8ZyBjbGFzcz0iY29tLnN1bi5zdGFyLmRyYXdpbmcuVGV4dFNoYXBlIj4KICAgICAgPGcgaWQ9ImlkMTAiPgogICAgICAgPHRleHQgY2xhc3M9IlRleHRTaGFwZSI+PHRzcGFuIGNsYXNzPSJUZXh0UGFyYWdyYXBoIiBmb250LWZhbWlseT0iTGliZXJhdGlvbiBTYW5zLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjIxMTdweCIgZm9udC13ZWlnaHQ9IjcwMCI+PHRzcGFuIGNsYXNzPSJUZXh0UG9zaXRpb24iIHg9IjcxMTIiIHk9IjEzNTA2Ij48dHNwYW4gZmlsbD0icmdiKDAsMCwwKSIgc3Ryb2tlPSJub25lIj4/PC90c3Bhbj48L3RzcGFuPjwvdHNwYW4+PC90ZXh0PgogICAgICA8L2c+CiAgICAgPC9nPgogICAgPC9nPgogICA8L2c+CiAgPC9nPgogPC9nPgo8L3N2Zz4=" alt="The conflicting changes"/></p>
+
+<p>Git detects that the changes made in one copy overlap with those made in the other
+and stops us from trampling on our previous work.
+What we have to do is pull the changes from GitHub,
+<a href="reference.html#merge">merge</a> them into the copy we&#39;re currently working in,
+and then push that.
+Let&#39;s start by pulling:</p>
+
+<pre><code class="bash">$ git pull origin master
+</code></pre>
+
+<pre><code class="output">remote: Counting objects: 5, done.        
 remote: Compressing objects: 100% (2/2), done.        
 remote: Total 3 (delta 1), reused 3 (delta 1)        
 Unpacking objects: 100% (3/3), done.
@@ -99,49 +283,93 @@ From https://github.com/vlad/planets
  * branch            master     -&gt; FETCH_HEAD
 Auto-merging mars.txt
 CONFLICT (content): Merge conflict in mars.txt
-Automatic merge failed; fix conflicts and then commit the result.</code></pre>
-<p><code>git pull</code> tells us there’s a conflict, and marks that conflict in the affected file:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">cat</span> mars.txt</code></pre>
-<pre class="output"><code>Cold and dry, but everything is my favorite color
+Automatic merge failed; fix conflicts and then commit the result.
+</code></pre>
+
+<p><code>git pull</code> tells us there&#39;s a conflict,
+and marks that conflict in the affected file:</p>
+
+<pre><code class="bash">$ cat mars.txt
+</code></pre>
+
+<pre><code class="output">Cold and dry, but everything is my favorite color
 The two moons may be a problem for Wolfman
 But the Mummy will appreciate the lack of humidity
 &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
 We added a different line in the other copy
 =======
 This line added to Wolfman&#39;s copy
-&gt;&gt;&gt;&gt;&gt;&gt;&gt; dabb4c8c450e8475aee9b14b4383acc99f42af1d</code></pre>
-<p>Our change—the one in <code>HEAD</code>—is preceded by <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>. Git has then inserted <code>=======</code> as a separator between the conflicting changes and marked the end of the content downloaded from GitHub with <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>. (The string of letters and digits after that marker identifies the commit we’ve just downloaded.)</p>
-<p>It is now up to us to edit this file to remove these markers and reconcile the changes. We can do anything we want: keep the change made in the local repository, keep the change made in the remote repository, write something new to replace both, or get rid of the change entirely. Let’s replace both so that the file looks like this:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">cat</span> mars.txt</code></pre>
-<pre class="output"><code>Cold and dry, but everything is my favorite color
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; dabb4c8c450e8475aee9b14b4383acc99f42af1d
+</code></pre>
+
+<p>Our change&mdash;the one in <code>HEAD</code>&mdash;is preceded by <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>.
+Git has then inserted <code>=======</code> as a separator between the conflicting changes
+and marked the end of the content downloaded from GitHub with <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>.
+(The string of letters and digits after that marker
+identifies the commit we&#39;ve just downloaded.)</p>
+
+<p>It is now up to us to edit this file to remove these markers
+and reconcile the changes.
+We can do anything we want: keep the change made in the local repository, keep
+the change made in the remote repository, write something new to replace both,
+or get rid of the change entirely.
+Let&#39;s replace both so that the file looks like this:</p>
+
+<pre><code class="bash">$ cat mars.txt
+</code></pre>
+
+<pre><code class="output">Cold and dry, but everything is my favorite color
 The two moons may be a problem for Wolfman
 But the Mummy will appreciate the lack of humidity
-We removed the conflict on this line</code></pre>
-<p>To finish merging, we add <code>mars.txt</code> to the changes being made by the merge and then commit:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> add mars.txt
-$ <span class="kw">git</span> status</code></pre>
-<pre class="output"><code># On branch master
+We removed the conflict on this line
+</code></pre>
+
+<p>To finish merging,
+we add <code>mars.txt</code> to the changes being made by the merge
+and then commit:</p>
+
+<pre><code class="bash">$ git add mars.txt
+$ git status
+</code></pre>
+
+<pre><code class="output"># On branch master
 # All conflicts fixed but you are still merging.
 #   (use &quot;git commit&quot; to conclude merge)
 #
 # Changes to be committed:
 #
 #   modified:   mars.txt
-#</code></pre>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> commit -m <span class="st">&quot;Merging changes from GitHub&quot;</span></code></pre>
-<pre class="output"><code>[master 2abf2b1] Merging changes from GitHub</code></pre>
+#
+</code></pre>
+
+<pre><code class="bash">$ git commit -m &quot;Merging changes from GitHub&quot;
+</code></pre>
+
+<pre><code class="output">[master 2abf2b1] Merging changes from GitHub
+</code></pre>
+
 <p>Now we can push our changes to GitHub:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> push origin master</code></pre>
-<pre class="output"><code>Counting objects: 10, done.
+
+<pre><code class="bash">$ git push origin master
+</code></pre>
+
+<pre><code class="output">Counting objects: 10, done.
 Delta compression using up to 4 threads.
 Compressing objects: 100% (6/6), done.
 Writing objects: 100% (6/6), 697 bytes, done.
 Total 6 (delta 2), reused 0 (delta 0)
 To https://github.com/vlad/planets.git
-   dabb4c8..2abf2b1  master -&gt; master</code></pre>
-<p>Git keeps track of what we’ve merged with what, so we don’t have to fix things by hand again when the collaborator who made the first change pulls again:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> pull origin master</code></pre>
-<pre class="output"><code>remote: Counting objects: 10, done.        
+   dabb4c8..2abf2b1  master -&gt; master
+</code></pre>
+
+<p>Git keeps track of what we&#39;ve merged with what,
+so we don&#39;t have to fix things by hand again
+when the collaborator who made the first change pulls again:</p>
+
+<pre><code class="bash">$ git pull origin master
+</code></pre>
+
+<pre><code class="output">remote: Counting objects: 10, done.        
 remote: Compressing objects: 100% (4/4), done.        
 remote: Total 6 (delta 2), reused 6 (delta 2)        
 Unpacking objects: 100% (6/6), done.
@@ -150,43 +378,48 @@ From https://github.com/vlad/planets
 Updating dabb4c8..2abf2b1
 Fast-forward
  mars.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)</code></pre>
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+</code></pre>
+
 <p>We get the merged file:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">cat</span> mars.txt </code></pre>
-<pre class="output"><code>Cold and dry, but everything is my favorite color
+
+<pre><code class="bash">$ cat mars.txt 
+</code></pre>
+
+<pre><code class="output">Cold and dry, but everything is my favorite color
 The two moons may be a problem for Wolfman
 But the Mummy will appreciate the lack of humidity
-We removed the conflict on this line</code></pre>
-<p>We don’t need to merge again because Git knows someone has already done that.</p>
-<p>Version control’s ability to merge conflicting changes is another reason users tend to divide their programs and papers into multiple files instead of storing everything in one large file. There’s another benefit too: whenever there are repeated conflicts in a particular file, the version control system is essentially trying to tell its users that they ought to clarify who’s responsible for what, or find a way to divide the work up differently.</p>
-<section class="challenge panel panel-success">
-<div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pencil"></span>Solving Conflicts that You Create</h2>
-</div>
-<div class="panel-body">
-<p>Clone the repository created by your instructor. Add a new file to it, and modify an existing file (your instructor will tell you which one). When asked by your instructor, pull her changes from the repository to create a conflict, then resolve it.</p>
-</div>
-</section>
-<section class="challenge panel panel-success">
-<div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pencil"></span>Conflicts on Non-textual files</h2>
-</div>
-<div class="panel-body">
-<p>What does Git do when there is a conflict in an image or some other non-textual file that is stored in version control?</p>
-</div>
-</section>
-        </div>
-      </div>
-      </article>
-      <div class="footer">
-        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
-        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/git-novice">Source</a>
-        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
-        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
-      </div>
-    </div>
-    <!-- Javascript placed at the end of the document so the pages load faster -->
-    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
-    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
-  </body>
+We removed the conflict on this line
+</code></pre>
+
+<p>We don&#39;t need to merge again because Git knows someone has already done that.</p>
+
+<p>Version control&#39;s ability to merge conflicting changes
+is another reason users tend to divide their programs and papers into multiple files
+instead of storing everything in one large file.
+There&#39;s another benefit too:
+whenever there are repeated conflicts in a particular file,
+the version control system is essentially trying to tell its users
+that they ought to clarify who&#39;s responsible for what,
+or find a way to divide the work up differently.</p>
+
+<blockquote>
+<h2>Solving Conflicts that You Create {.challenge}</h2>
+
+<p>Clone the repository created by your instructor.
+Add a new file to it,
+and modify an existing file (your instructor will tell you which one).
+When asked by your instructor,
+pull her changes from the repository to create a conflict,
+then resolve it.</p>
+
+<h2>Conflicts on Non-textual files {.challenge}</h2>
+
+<p>What does Git do
+when there is a conflict in an image or some other non-textual file
+that is stored in version control?</p>
+</blockquote>
+
+</body>
+
 </html>

@@ -9,7 +9,7 @@ minutes: 5
 > *   Understand the benefits of an automated version control system.
 > *   Understand the basics of how Git works.
 
-We'll start by exploring how version control can be used
+**We'll start by exploring** how version control can be used
 to keep track of what one person did and when.
 Even if you aren't collaborating with other people,
 automated version control is much better than this situation:

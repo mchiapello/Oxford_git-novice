@@ -1,56 +1,212 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="generator" content="pandoc">
-    <title>Software Carpentry: Version Control with Git</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
-    <link rel="stylesheet" type="text/css" href="css/swc.css" />
-    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
-    <meta charset="UTF-8" />
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body class="lesson">
-    <div class="container card">
-      <div class="banner">
-        <a href="http://software-carpentry.org" title="Software Carpentry">
-          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
-        </a>
-      </div>
-      <article>
-      <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-          <h1 class="title">Version Control with Git</h1>
-          <h2 class="subtitle">Tracking Changes</h2>
-<section class="objectives panel panel-warning">
-<div class="panel-heading">
-<h2><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
-</div>
-<div class="panel-body">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Learning Objectives {.objectives}</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<blockquote>
+<h2>Learning Objectives {.objectives}</h2>
+
 <ul>
-<li>Go through the modify-add-commit cycle for single and multiple files.</li>
-<li>Explain where information is stored at each stage of Git commit workflow.</li>
+<li>  Go through the modify-add-commit cycle for single and multiple files.</li>
+<li>  Explain where information is stored at each stage of Git commit workflow.</li>
 </ul>
-</div>
-</section>
-<p>Let’s create a file called <code>mars.txt</code> that contains some notes about the Red Planet’s suitability as a base. (We’ll use <code>nano</code> to edit the file; you can use whatever editor you like. In particular, this does not have to be the <code>core.editor</code> you set globally earlier.)</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">nano</span> mars.txt</code></pre>
+</blockquote>
+
+<p>Let&#39;s create a file called <code>mars.txt</code> that contains some notes
+about the Red Planet&#39;s suitability as a base.
+(We&#39;ll use <code>nano</code> to edit the file;
+you can use whatever editor you like.
+In particular, this does not have to be the <code>core.editor</code> you set globally earlier.)</p>
+
+<pre><code class="bash">$ nano mars.txt
+</code></pre>
+
 <p>Type the text below into the <code>mars.txt</code> file:</p>
-<pre class="output"><code>Cold and dry, but everything is my favorite color</code></pre>
+
+<pre><code class="output">Cold and dry, but everything is my favorite color
+</code></pre>
+
 <p><code>mars.txt</code> now contains a single line, which we can see by running:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">ls</span></code></pre>
-<pre class="output"><code>mars.txt</code></pre>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">cat</span> mars.txt</code></pre>
-<pre class="output"><code>Cold and dry, but everything is my favorite color</code></pre>
-<p>If we check the status of our project again, Git tells us that it’s noticed the new file:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> status</code></pre>
-<pre class="output"><code># On branch master
+
+<pre><code class="bash">$ ls
+</code></pre>
+
+<pre><code class="output">mars.txt
+</code></pre>
+
+<pre><code class="bash">$ cat mars.txt
+</code></pre>
+
+<pre><code class="output">Cold and dry, but everything is my favorite color
+</code></pre>
+
+<p>If we check the status of our project again,
+Git tells us that it&#39;s noticed the new file:</p>
+
+<pre><code class="bash">$ git status
+</code></pre>
+
+<pre><code class="output"># On branch master
 #
 # Initial commit
 #
@@ -58,12 +214,22 @@
 #   (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
 #
 #   mars.txt
-nothing added to commit but untracked files present (use &quot;git add&quot; to track)</code></pre>
-<p>The “untracked files” message means that there’s a file in the directory that Git isn’t keeping track of. We can tell Git to track a file using <code>git add</code>:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> add mars.txt</code></pre>
+nothing added to commit but untracked files present (use &quot;git add&quot; to track)
+</code></pre>
+
+<p>The &ldquo;untracked files&rdquo; message means that there&#39;s a file in the directory
+that Git isn&#39;t keeping track of.
+We can tell Git to track a file using <code>git add</code>:</p>
+
+<pre><code class="bash">$ git add mars.txt
+</code></pre>
+
 <p>and then check that the right thing happened:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> status</code></pre>
-<pre class="output"><code># On branch master
+
+<pre><code class="bash">$ git status
+</code></pre>
+
+<pre><code class="output"># On branch master
 #
 # Initial commit
 #
@@ -71,134 +237,304 @@ nothing added to commit but untracked files present (use &quot;git add&quot; to 
 #   (use &quot;git rm --cached &lt;file&gt;...&quot; to unstage)
 #
 #   new file:   mars.txt
-#</code></pre>
-<p>Git now knows that it’s supposed to keep track of <code>mars.txt</code>, but it hasn’t recorded these changes as a commit yet. To get it to do that, we need to run one more command:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> commit -m <span class="st">&quot;Start notes on Mars as a base&quot;</span></code></pre>
-<pre class="output"><code>[master (root-commit) f22b25e] Start notes on Mars as a base
+#
+</code></pre>
+
+<p>Git now knows that it&#39;s supposed to keep track of <code>mars.txt</code>,
+but it hasn&#39;t recorded these changes as a commit yet.
+To get it to do that,
+we need to run one more command:</p>
+
+<pre><code class="bash">$ git commit -m &quot;Start notes on Mars as a base&quot;
+</code></pre>
+
+<pre><code class="output">[master (root-commit) f22b25e] Start notes on Mars as a base
  1 file changed, 1 insertion(+)
- create mode 100644 mars.txt</code></pre>
-<p>When we run <code>git commit</code>, Git takes everything we have told it to save by using <code>git add</code> and stores a copy permanently inside the special <code>.git</code> directory. This permanent copy is called a <a href="reference.html#commit">commit</a> (or <a href="reference.html#revision">revision</a>) and its short identifier is <code>f22b25e</code> (Your commit may have another identifier.)</p>
-<p>We use the <code>-m</code> flag (for “message”) to record a short, descriptive, and specific comment that will help us remember later on what we did and why. If we just run <code>git commit</code> without the <code>-m</code> option, Git will launch <code>nano</code> (or whatever other editor we configured as <code>core.editor</code>) so that we can write a longer message.</p>
-<p><a href="http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html">Good commit messages</a> start with a brief (&lt;50 characters) summary of changes made in the commit. If you want to go into more detail, add a blank line between the summary line and your additional notes.</p>
+ create mode 100644 mars.txt
+</code></pre>
+
+<p>When we run <code>git commit</code>,
+Git takes everything we have told it to save by using <code>git add</code>
+and stores a copy permanently inside the special <code>.git</code> directory.
+This permanent copy is called a <a href="reference.html#commit">commit</a>
+(or <a href="reference.html#revision">revision</a>) and its short identifier is <code>f22b25e</code>
+(Your commit may have another identifier.)</p>
+
+<p>We use the <code>-m</code> flag (for &ldquo;message&rdquo;)
+to record a short, descriptive, and specific comment that will help us remember later on what we did and why.
+If we just run <code>git commit</code> without the <code>-m</code> option,
+Git will launch <code>nano</code> (or whatever other editor we configured as <code>core.editor</code>)
+so that we can write a longer message.</p>
+
+<p><a href="http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html">Good commit messages</a> start with a brief (&lt;50 characters) summary of
+changes made in the commit.  If you want to go into more detail, add
+a blank line between the summary line and your additional notes.</p>
+
 <p>If we run <code>git status</code> now:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> status</code></pre>
-<pre class="output"><code># On branch master
-nothing to commit, working directory clean</code></pre>
-<p>it tells us everything is up to date. If we want to know what we’ve done recently, we can ask Git to show us the project’s history using <code>git log</code>:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> log</code></pre>
-<pre class="output"><code>commit f22b25e3233b4645dabd0d81e651fe074bd8e73b
+
+<pre><code class="bash">$ git status
+</code></pre>
+
+<pre><code class="output"># On branch master
+nothing to commit, working directory clean
+</code></pre>
+
+<p>it tells us everything is up to date.
+If we want to know what we&#39;ve done recently,
+we can ask Git to show us the project&#39;s history using <code>git log</code>:</p>
+
+<pre><code class="bash">$ git log
+</code></pre>
+
+<pre><code class="output">commit f22b25e3233b4645dabd0d81e651fe074bd8e73b
 Author: Vlad Dracula &lt;vlad@tran.sylvan.ia&gt;
 Date:   Thu Aug 22 09:51:46 2013 -0400
 
-    Start notes on Mars as a base</code></pre>
-<p><code>git log</code> lists all commits made to a repository in reverse chronological order. The listing for each commit includes the commit’s full identifier (which starts with the same characters as the short identifier printed by the <code>git commit</code> command earlier), the commit’s author, when it was created, and the log message Git was given when the commit was created.</p>
-<aside class="callout panel panel-info">
-<div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pushpin"></span>Where Are My Changes?</h2>
-</div>
-<div class="panel-body">
-<p>If we run <code>ls</code> at this point, we will still see just one file called <code>mars.txt</code>. That’s because Git saves information about files’ history in the special <code>.git</code> directory mentioned earlier so that our filesystem doesn’t become cluttered (and so that we can’t accidentally edit or delete an old version).</p>
-</div>
-</aside>
-<p>Now suppose Dracula adds more information to the file. (Again, we’ll edit with <code>nano</code> and then <code>cat</code> the file to show its contents; you may use a different editor, and don’t need to <code>cat</code>.)</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">nano</span> mars.txt
-$ <span class="kw">cat</span> mars.txt</code></pre>
-<pre class="output"><code>Cold and dry, but everything is my favorite color
-The two moons may be a problem for Wolfman</code></pre>
-<p>When we run <code>git status</code> now, it tells us that a file it already knows about has been modified:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> status</code></pre>
-<pre class="output"><code># On branch master
+    Start notes on Mars as a base
+</code></pre>
+
+<p><code>git log</code> lists all commits  made to a repository in reverse chronological order.
+The listing for each commit includes
+the commit&#39;s full identifier
+(which starts with the same characters as
+the short identifier printed by the <code>git commit</code> command earlier),
+the commit&#39;s author,
+when it was created,
+and the log message Git was given when the commit was created.</p>
+
+<blockquote>
+<h2>Where Are My Changes? {.callout}</h2>
+
+<p>If we run <code>ls</code> at this point, we will still see just one file called <code>mars.txt</code>.
+That&#39;s because Git saves information about files&#39; history
+in the special <code>.git</code> directory mentioned earlier
+so that our filesystem doesn&#39;t become cluttered
+(and so that we can&#39;t accidentally edit or delete an old version).</p>
+</blockquote>
+
+<p>Now suppose Dracula adds more information to the file.
+(Again, we&#39;ll edit with <code>nano</code> and then <code>cat</code> the file to show its contents;
+you may use a different editor, and don&#39;t need to <code>cat</code>.)</p>
+
+<pre><code class="bash">$ nano mars.txt
+$ cat mars.txt
+</code></pre>
+
+<pre><code class="output">Cold and dry, but everything is my favorite color
+The two moons may be a problem for Wolfman
+</code></pre>
+
+<p>When we run <code>git status</code> now,
+it tells us that a file it already knows about has been modified:</p>
+
+<pre><code class="bash">$ git status
+</code></pre>
+
+<pre><code class="output"># On branch master
 # Changes not staged for commit:
 #   (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)
 #   (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)
 #
 #   modified:   mars.txt
 #
-no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)</code></pre>
-<p>The last line is the key phrase: “no changes added to commit”. We have changed this file, but we haven’t told Git we will want to save those changes (which we do with <code>git add</code>) nor have we saved them (which we do with <code>git commit</code>). So let’s do that now. It is good practice to always review our changes before saving them. We do this using <code>git diff</code>. This shows us the differences between the current state of the file and the most recently saved version:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> diff</code></pre>
-<pre class="output"><code>diff --git a/mars.txt b/mars.txt
+no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)
+</code></pre>
+
+<p>The last line is the key phrase:
+&ldquo;no changes added to commit&rdquo;.
+We have changed this file,
+but we haven&#39;t told Git we will want to save those changes
+(which we do with <code>git add</code>)
+nor have we saved them (which we do with <code>git commit</code>).
+So let&#39;s do that now. It is good practice to always review
+our changes before saving them. We do this using <code>git diff</code>.
+This shows us the differences between the current state
+of the file and the most recently saved version:</p>
+
+<pre><code class="bash">$ git diff
+</code></pre>
+
+<pre><code class="output">diff --git a/mars.txt b/mars.txt
 index df0654a..315bf3a 100644
 --- a/mars.txt
 +++ b/mars.txt
 @@ -1 +1,2 @@
  Cold and dry, but everything is my favorite color
-+The two moons may be a problem for Wolfman</code></pre>
-<p>The output is cryptic because it is actually a series of commands for tools like editors and <code>patch</code> telling them how to reconstruct one file given the other. If we break it down into pieces:</p>
-<ol style="list-style-type: decimal">
-<li>The first line tells us that Git is producing output similar to the Unix <code>diff</code> command comparing the old and new versions of the file.</li>
-<li>The second line tells exactly which versions of the file Git is comparing; <code>df0654a</code> and <code>315bf3a</code> are unique computer-generated labels for those versions.</li>
-<li>The third and fourth lines once again show the name of the file being changed.</li>
-<li>The remaining lines are the most interesting, they show us the actual differences and the lines on which they occur. In particular, the <code>+</code> markers in the first column show where we have added lines.</li>
++The two moons may be a problem for Wolfman
+</code></pre>
+
+<p>The output is cryptic because
+it is actually a series of commands for tools like editors and <code>patch</code>
+telling them how to reconstruct one file given the other.
+If we break it down into pieces:</p>
+
+<ol>
+<li> The first line tells us that Git is producing output similar to the Unix <code>diff</code> command
+comparing the old and new versions of the file.</li>
+<li> The second line tells exactly which versions of the file
+Git is comparing;
+<code>df0654a</code> and <code>315bf3a</code> are unique computer-generated labels for those versions.</li>
+<li> The third and fourth lines once again show the name of the file being changed.</li>
+<li> The remaining lines are the most interesting, they show us the actual differences
+and the lines on which they occur.
+In particular,
+the <code>+</code> markers in the first column show where we have added lines.</li>
 </ol>
-<p>After reviewing our change, it’s time to commit it:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> commit -m <span class="st">&quot;Add concerns about effects of Mars&#39; moons on Wolfman&quot;</span>
-$ <span class="kw">git</span> status</code></pre>
-<pre class="output"><code># On branch master
+
+<p>After reviewing our change, it&#39;s time to commit it:</p>
+
+<pre><code class="bash">$ git commit -m &quot;Add concerns about effects of Mars&#39; moons on Wolfman&quot;
+$ git status
+</code></pre>
+
+<pre><code class="output"># On branch master
 # Changes not staged for commit:
 #   (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)
 #   (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)
 #
 #   modified:   mars.txt
 #
-no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)</code></pre>
-<p>Whoops: Git won’t commit because we didn’t use <code>git add</code> first. Let’s fix that:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> add mars.txt
-$ <span class="kw">git</span> commit -m <span class="st">&quot;Add concerns about effects of Mars&#39; moons on Wolfman&quot;</span></code></pre>
-<pre class="output"><code>[master 34961b1] Add concerns about effects of Mars&#39; moons on Wolfman
- 1 file changed, 1 insertion(+)</code></pre>
-<p>Git insists that we add files to the set we want to commit before actually committing anything because we may not want to commit everything at once. For example, suppose we’re adding a few citations to our supervisor’s work to our thesis. We might want to commit those additions, and the corresponding addition to the bibliography, but <em>not</em> commit the work we’re doing on the conclusion (which we haven’t finished yet).</p>
-<p>To allow for this, Git has a special <em>staging area</em> where it keeps track of things that have been added to the current <a href="reference.html#change-set">change set</a> but not yet committed.</p>
-<aside class="callout panel panel-info">
-<div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pushpin"></span>Staging area</h2>
-</div>
-<div class="panel-body">
-<p>If you think of Git as taking snapshots of changes over the life of a project, <code>git add</code> specifies <em>what</em> will go in a snapshot (putting things in the staging area), and <code>git commit</code> then <em>actually takes</em> the snapshot, and makes a permanent record of it (as a commit). If you don’t have anything staged when you type <code>git commit</code>, Git will prompt you to use <code>git commit -a</code> or <code>git commit --all</code>, which is kind of like gathering <em>everyone</em> for the picture! However, it’s almost always better to explicitly add things to the staging area, because you might commit changes you forgot you made. (Going back to snapshots, you might get the extra with incomplete makeup walking on the stage for the snapshot because you used <code>-a</code>!) Try to stage things manually, or you might find yourself searching for “git undo commit” more than you would like!</p>
-</div>
-</aside>
-<div class="figure">
-<img src="fig/git-staging-area.svg" alt="The Git Staging Area" /><p class="caption">The Git Staging Area</p>
-</div>
-<p>Let’s watch as our changes to a file move from our editor to the staging area and into long-term storage. First, we’ll add another line to the file:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">nano</span> mars.txt
-$ <span class="kw">cat</span> mars.txt</code></pre>
-<pre class="output"><code>Cold and dry, but everything is my favorite color
+no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)
+</code></pre>
+
+<p>Whoops:
+Git won&#39;t commit because we didn&#39;t use <code>git add</code> first.
+Let&#39;s fix that:</p>
+
+<pre><code class="bash">$ git add mars.txt
+$ git commit -m &quot;Add concerns about effects of Mars&#39; moons on Wolfman&quot;
+</code></pre>
+
+<pre><code class="output">[master 34961b1] Add concerns about effects of Mars&#39; moons on Wolfman
+ 1 file changed, 1 insertion(+)
+</code></pre>
+
+<p>Git insists that we add files to the set we want to commit
+before actually committing anything
+because we may not want to commit everything at once.
+For example,
+suppose we&#39;re adding a few citations to our supervisor&#39;s work
+to our thesis.
+We might want to commit those additions,
+and the corresponding addition to the bibliography,
+but <em>not</em> commit the work we&#39;re doing on the conclusion
+(which we haven&#39;t finished yet).</p>
+
+<p>To allow for this,
+Git has a special <em>staging area</em>
+where it keeps track of things that have been added to
+the current <a href="reference.html#change-set">change set</a>
+but not yet committed.</p>
+
+<blockquote>
+<h2>Staging area {.callout}</h2>
+
+<p>If you think of Git as taking snapshots of changes over the life of a
+project,
+<code>git add</code> specifies <em>what</em> will go in a snapshot
+(putting things in the staging area),
+and <code>git commit</code> then <em>actually takes</em> the snapshot, and
+makes a permanent record of it (as a commit).
+If you don&#39;t have anything staged when you type <code>git commit</code>,
+Git will prompt you to use <code>git commit -a</code> or <code>git commit --all</code>,
+which is kind of like gathering <em>everyone</em> for the picture!
+However, it&#39;s almost always better to
+explicitly add things to the staging area, because you might
+commit changes you forgot you made. (Going back to snapshots,
+you might get the extra with incomplete makeup walking on
+the stage for the snapshot because you used <code>-a</code>!)
+Try to stage things manually,
+or you might find yourself searching for &ldquo;git undo commit&rdquo; more
+than you would like!</p>
+</blockquote>
+
+<p><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSI2MjJweCINCgkgaGVpZ2h0PSIyMThweCIgdmlld0JveD0iMCAwIDYyMiAyMTgiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYyMiAyMTgiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGcgaWQ9IkxheWVyXzUiPg0KCTxwYXRoIGZpbGw9IiNCNUI1QjUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBkPSJNNTk4LDIzYzAtOC4yODQtNi43MTYtMTUtMTUtMTVIMTk4Yy04LjI4NCwwLTE1LDYuNzE2LTE1LDE1djE2Nw0KCQljMCw4LjI4NCw2LjcxNiwxNSwxNSwxNWgzODVjOC4yODQsMCwxNS02LjcxNiwxNS0xNVYyM3oiLz4NCgk8cmVjdCB4PSIxOTciIHk9IjE5IiBmaWxsPSJub25lIiB3aWR0aD0iNzAiIGhlaWdodD0iMjgiLz4NCgk8dGV4dCB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDE5NyAzMS40MTk5KSIgZm9udC1mYW1pbHk9IidDb25zb2xhcyciIGZvbnQtc2l6ZT0iMTgiPi5naXQ8L3RleHQ+DQo8L2c+DQo8ZyBpZD0iTGF5ZXJfMyI+DQoJPGc+DQoJCTxsaW5lYXJHcmFkaWVudCBpZD0iU1ZHSURfMV8iIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMzAzLjQ5OSIgeTE9IjgzLjk4NjMiIHgyPSIzMDMuNDk5IiB5Mj0iMTM5LjIzMzkiPg0KCQkJPHN0b3AgIG9mZnNldD0iMC4wOTgyIiBzdHlsZT0ic3RvcC1jb2xvcjojQzRDNEM0Ii8+DQoJCQk8c3RvcCAgb2Zmc2V0PSIwLjUzMjYiIHN0eWxlPSJzdG9wLWNvbG9yOiM2ODY4NjgiLz4NCgkJCTxzdG9wICBvZmZzZXQ9IjEiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMDAwMDAiLz4NCgkJPC9saW5lYXJHcmFkaWVudD4NCgkJPHBhdGggZmlsbD0idXJsKCNTVkdJRF8xXykiIHN0cm9rZT0iIzIzMUYyMCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBkPSJNMjUzLjQ1MywxMzguMjA2YzAtOS4yNjQsMjIuNDA0LTE2Ljc3OCw1MC4wNDctMTYuNzc4DQoJCQlzNTAuMDQ1LDcuNTE0LDUwLjA0NSwxNi43Nzh2MS4wMjhjMCwwLDAtMi4xMTUsMC0zLjExN2MwLTEuMDA2LDAtMzUuNzQ0LDAtMzUuNzQ0djAuMzk0YzAtOS4yNy0yMi40MDItMTYuNzgtNTAuMDQ1LTE2Ljc4DQoJCQlzLTUwLjA0Nyw3LjUxLTUwLjA0NywxNi43OHYtMC4zOTRjMCwwLDAsMzQuNTE5LDAsMzUuNzMzYzAsMS4yMDUsMCwzLjEyOCwwLDMuMTI4VjEzOC4yMDZ6Ii8+DQoJCTxnPg0KCQkJPHBhdGggZmlsbD0iI0ZGRkZGRiIgc3Ryb2tlPSIjMjMxRjIwIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIGQ9Ik0zNTMuNTQ1LDEwMC4zNzNjMCwwLDAsMzQuNzM4LDAsMzUuNzQ0DQoJCQkJYzAsMS4wMDIsMC4zNTUsMy4xMTcsMC4zNTUsMy4xMTdjMCw5LjI3MS0yMi43NTgsMTYuNzgtNTAuNCwxNi43OHMtNTAuNC03LjUwOS01MC40LTE2Ljc4YzAsMCwwLjM1NC0xLjkyMywwLjM1NC0zLjEyOA0KCQkJCWMwLTEuMjE0LDAtMzUuNzMzLDAtMzUuNzMzYzAsOS4yNzQsMjIuNDA0LDE2Ljc4NSw1MC4wNDcsMTYuNzg1UzM1My41NDUsMTA5LjY0NywzNTMuNTQ1LDEwMC4zNzN6Ii8+DQoJCTwvZz4NCgk8L2c+DQoJPGc+DQoJCTxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBwb2ludHM9IjM0MS43MTksOTQuOTY1IDI4Mi40MTEsOTQuOTY1IDI2OS4yMzUsMTA5LjQ1OSANCgkJCTMyOC41NDIsMTA5LjQ1OSAJCSIvPg0KCQk8bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiM3MEJGNDEiIHN0cm9rZS13aWR0aD0iMiIgeDE9IjI4Mi40MTEiIHkxPSIxMDAuODk0IiB4Mj0iMzMxLjE2NSIgeTI9IjEwMC44OTQiLz4NCgk8L2c+DQo8L2c+DQo8ZyBpZD0iTGF5ZXJfNCI+DQoJPGxpbmVhckdyYWRpZW50IGlkPSJTVkdJRF8yXyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSI1MzcuMTc2OCIgeTE9IjE3LjY2MDIiIHgyPSI1MzcuMTc2OCIgeTI9IjcyLjkxMjYiPg0KCQk8c3RvcCAgb2Zmc2V0PSIwLjA5ODIiIHN0eWxlPSJzdG9wLWNvbG9yOiNDNEM0QzQiLz4NCgkJPHN0b3AgIG9mZnNldD0iMC41MzI2IiBzdHlsZT0ic3RvcC1jb2xvcjojNjg2ODY4Ii8+DQoJCTxzdG9wICBvZmZzZXQ9IjEiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMDAwMDAiLz4NCgk8L2xpbmVhckdyYWRpZW50Pg0KCTxwYXRoIGZpbGw9InVybCgjU1ZHSURfMl8pIiBzdHJva2U9IiMyMzFGMjAiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgZD0iTTQ4Ny4xMyw3MS44ODJjMC05LjI2OCwyMi40MDctMTYuNzgxLDUwLjA0Ny0xNi43ODENCgkJYzI3LjY0MSwwLDUwLjA0Nyw3LjUxMyw1MC4wNDcsMTYuNzgxdjEuMDNjMCwwLDAtMi4xMTgsMC0zLjEyMXMwLTM1LjczOSwwLTM1LjczOXYwLjM4OGMwLTkuMjY4LTIyLjQwNi0xNi43ODEtNTAuMDQ3LTE2Ljc4MQ0KCQljLTI3LjY0LDAtNTAuMDQ3LDcuNTEzLTUwLjA0NywxNi43ODF2LTAuMzg4YzAsMCwwLDM0LjUxOSwwLDM1LjcyOHMwLDMuMTMyLDAsMy4xMzJWNzEuODgyeiIvPg0KCTxnPg0KCQk8cGF0aCBmaWxsPSIjRkZGRkZGIiBzdHJva2U9IiMyMzFGMjAiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgZD0iTTU4Ny4wMjEsMTExLjI4NGMwLDAsMCwzNC43MzcsMCwzNS43MzkNCgkJCWMwLDEuMDAzLDAuMzU0LDMuMTIyLDAuMzU0LDMuMTIyYzAsOS4yNjgtMjIuNzYsMTYuNzc5LTUwLjQsMTYuNzc5Yy0yNy42NCwwLTUwLjM5OS03LjUxMi01MC4zOTktMTYuNzc5DQoJCQljMCwwLDAuMzUzLTEuOTIzLDAuMzUzLTMuMTMyczAtMzUuNzI5LDAtMzUuNzI5YzAsOS4yNjgsMjIuNDA3LDE2Ljc4LDUwLjA0NywxNi43OA0KCQkJQzU2NC42MTQsMTI4LjA2NCw1ODcuMDIxLDEyMC41NTEsNTg3LjAyMSwxMTEuMjg0eiIvPg0KCTwvZz4NCgk8Zz4NCgkJPHBhdGggZmlsbD0iI0ZGRkZGRiIgc3Ryb2tlPSIjMjMxRjIwIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIGQ9Ik01ODcuMDIxLDcyLjYwMWMwLDAsMCwzNC43MzYsMCwzNS43MzkNCgkJCWMwLDEuMDAyLDAuMzU0LDMuMTIsMC4zNTQsMy4xMmMwLDkuMjY4LTIyLjc2LDE2Ljc4LTUwLjQsMTYuNzhjLTI3LjY0LDAtNTAuMzk5LTcuNTEzLTUwLjM5OS0xNi43OGMwLDAsMC4zNTMtMS45MjMsMC4zNTMtMy4xMzINCgkJCXMwLTM1LjcyOCwwLTM1LjcyOGMwLDkuMjY4LDIyLjQwNywxNi43OCw1MC4wNDcsMTYuNzhDNTY0LjYxNCw4OS4zODEsNTg3LjAyMSw4MS44NjksNTg3LjAyMSw3Mi42MDF6Ii8+DQoJPC9nPg0KCTxnPg0KCQk8cGF0aCBmaWxsPSIjRkZGRkZGIiBzdHJva2U9IiMyMzFGMjAiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgZD0iTTU4Ny4wMjEsMzMuNjI4YzAsMCwwLDM0LjczNywwLDM1LjczOXMwLjM1NCwzLjEyLDAuMzU0LDMuMTINCgkJCWMwLDkuMjY5LTIyLjc2LDE2Ljc4MS01MC40LDE2Ljc4MWMtMjcuNjQsMC01MC4zOTktNy41MTMtNTAuMzk5LTE2Ljc4MWMwLDAsMC4zNTMtMS45MjIsMC4zNTMtMy4xMzFzMC0zNS43MjgsMC0zNS43MjgNCgkJCWMwLDkuMjY4LDIyLjQwNywxNi43OCw1MC4wNDcsMTYuNzhDNTY0LjYxNCw1MC40MDksNTg3LjAyMSw0Mi44OTYsNTg3LjAyMSwzMy42Mjh6Ii8+DQoJPC9nPg0KCTxnPg0KCQk8cG9seWdvbiBmaWxsPSIjRkZGRkZGIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgcG9pbnRzPSI1NzMuMjE2LDI2LjM4MSA1MTMuOTA4LDI2LjM4MSA1MDAuNzMyLDQwLjg3NSANCgkJCTU2MC4wMzksNDAuODc1IAkJIi8+DQoJCTxsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzcwQkY0MSIgc3Ryb2tlLXdpZHRoPSIyIiB4MT0iNTEzLjkwOCIgeTE9IjMyLjMxMSIgeDI9IjU2Mi42NjIiIHkyPSIzMi4zMTEiLz4NCgk8L2c+DQo8L2c+DQo8ZyBpZD0iTGF5ZXJfMSI+DQoJPGc+DQoJCTxyZWN0IHg9IjI0IiB5PSI0NSIgZmlsbD0iI0RDREVFMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMjgiLz4NCgkJPHJlY3QgeD0iMjQiIHk9IjQ1IiBmaWxsPSJub25lIiBzdHJva2U9IiM4NTg4OEQiIHN0cm9rZS13aWR0aD0iMiIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMjgiLz4NCgkJPGxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiIHgxPSIzNyIgeTE9IjY1IiB4Mj0iMTExIiB5Mj0iNjUiLz4NCgkJPGxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiIHgxPSIzNyIgeTE9IjcxIiB4Mj0iMTExIiB5Mj0iNzEiLz4NCgkJPGxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiIHgxPSIzNyIgeTE9Ijc3IiB4Mj0iMTExIiB5Mj0iNzciLz4NCgkJPGxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNzBCRjQxIiBzdHJva2Utd2lkdGg9IjIiIHgxPSIzNyIgeTE9Ijg5IiB4Mj0iMTExIiB5Mj0iODkiLz4NCgk8L2c+DQo8L2c+DQo8ZyBpZD0iTGF5ZXJfMiI+DQoJPGc+DQoJCTxyZWN0IHg9IjE1MC44NzEiIHk9Ijk2Ljc2OCIgZmlsbD0iIzQ1QkVFRSIgd2lkdGg9IjQ1Ljk1NiIgaGVpZ2h0PSIzMC42MDQiLz4NCgkJPHBvbHlnb24gZmlsbD0iIzQ1QkVFRSIgcG9pbnRzPSIxOTMuNDY3LDgxLjU3MSAxOTMuNDY3LDE0MS42OTYgMjM0LjAyLDExMS4xNjMgCQkiLz4NCgk8L2c+DQoJPHJlY3QgeD0iMTY0IiB5PSIxMDYuMDY5IiBmaWxsPSJub25lIiB3aWR0aD0iNTIuNzQzIiBoZWlnaHQ9IjE0Ii8+DQoJPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAxNjQgMTE0LjM0OTYpIiBmb250LWZhbWlseT0iJ0NvbnNvbGFzJyIgZm9udC1zaXplPSIxMiI+Z2l0IGFkZDwvdGV4dD4NCgk8Zz4NCgkJPHJlY3QgeD0iMzgxLjI1MSIgeT0iOTYuNzY4IiBmaWxsPSIjNDVCRUVFIiB3aWR0aD0iNDUuOTU2IiBoZWlnaHQ9IjMwLjYwNCIvPg0KCQk8cG9seWdvbiBmaWxsPSIjNDVCRUVFIiBwb2ludHM9IjQyMy44NDcsODEuNTcxIDQyMy44NDcsMTQxLjY5NiA0NjQuMzk5LDExMS4xNjMgCQkiLz4NCgk8L2c+DQoJPHJlY3QgeD0iMzc2Ljk4IiB5PSIxMDYuMDY5IiBmaWxsPSJub25lIiB3aWR0aD0iODUuNTQyIiBoZWlnaHQ9IjE0Ii8+DQoJPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAzODYuNzYzNyAxMTQuMzQ5NikiIGZvbnQtZmFtaWx5PSInQ29uc29sYXMnIiBmb250LXNpemU9IjEyIj5naXQgY29tbWl0PC90ZXh0Pg0KCTxyZWN0IHg9IjIyOSIgeT0iMTY2IiBmaWxsPSJub25lIiB3aWR0aD0iMTQ3IiBoZWlnaHQ9IjE3Ii8+DQoJPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAyNjkuNDc2NiAxNzQuNjI3OSkiIGZvbnQtZmFtaWx5PSInSGVsdmV0aWNhJyIgZm9udC1zaXplPSIxMiI+c3RhZ2luZyBhcmVhPC90ZXh0Pg0KCTxyZWN0IHg9IjQ2NC43ODUiIHk9IjE3OSIgZmlsbD0ibm9uZSIgd2lkdGg9IjE0NyIgaGVpZ2h0PSIxNyIvPg0KCTx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgNTExLjk0MTQgMTg3LjYyNzkpIiBmb250LWZhbWlseT0iJ0hlbHZldGljYSciIGZvbnQtc2l6ZT0iMTIiPnJlcG9zaXRvcnk8L3RleHQ+DQo8L2c+DQo8L3N2Zz4NCg==" alt="The Git Staging Area"/></p>
+
+<p>Let&#39;s watch as our changes to a file move from our editor
+to the staging area
+and into long-term storage.
+First,
+we&#39;ll add another line to the file:</p>
+
+<pre><code class="bash">$ nano mars.txt
+$ cat mars.txt
+</code></pre>
+
+<pre><code class="output">Cold and dry, but everything is my favorite color
 The two moons may be a problem for Wolfman
-But the Mummy will appreciate the lack of humidity</code></pre>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> diff</code></pre>
-<pre class="output"><code>diff --git a/mars.txt b/mars.txt
+But the Mummy will appreciate the lack of humidity
+</code></pre>
+
+<pre><code class="bash">$ git diff
+</code></pre>
+
+<pre><code class="output">diff --git a/mars.txt b/mars.txt
 index 315bf3a..b36abfd 100644
 --- a/mars.txt
 +++ b/mars.txt
 @@ -1,2 +1,3 @@
  Cold and dry, but everything is my favorite color
  The two moons may be a problem for Wolfman
-+But the Mummy will appreciate the lack of humidity</code></pre>
-<p>So far, so good: we’ve added one line to the end of the file (shown with a <code>+</code> in the first column). Now let’s put that change in the staging area and see what <code>git diff</code> reports:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> add mars.txt
-$ <span class="kw">git</span> diff</code></pre>
-<p>There is no output: as far as Git can tell, there’s no difference between what it’s been asked to save permanently and what’s currently in the directory. However, if we do this:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> diff --staged</code></pre>
-<pre class="output"><code>diff --git a/mars.txt b/mars.txt
++But the Mummy will appreciate the lack of humidity
+</code></pre>
+
+<p>So far, so good:
+we&#39;ve added one line to the end of the file
+(shown with a <code>+</code> in the first column).
+Now let&#39;s put that change in the staging area
+and see what <code>git diff</code> reports:</p>
+
+<pre><code class="bash">$ git add mars.txt
+$ git diff
+</code></pre>
+
+<p>There is no output:
+as far as Git can tell,
+there&#39;s no difference between what it&#39;s been asked to save permanently
+and what&#39;s currently in the directory.
+However,
+if we do this:</p>
+
+<pre><code class="bash">$ git diff --staged
+</code></pre>
+
+<pre><code class="output">diff --git a/mars.txt b/mars.txt
 index 315bf3a..b36abfd 100644
 --- a/mars.txt
 +++ b/mars.txt
 @@ -1,2 +1,3 @@
  Cold and dry, but everything is my favorite color
  The two moons may be a problem for Wolfman
-+But the Mummy will appreciate the lack of humidity</code></pre>
-<p>it shows us the difference between the last committed change and what’s in the staging area. Let’s save our changes:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> commit -m <span class="st">&quot;Discuss concerns about Mars&#39; climate for Mummy&quot;</span></code></pre>
-<pre class="output"><code>[master 005937f] Discuss concerns about Mars&#39; climate for Mummy
- 1 file changed, 1 insertion(+)</code></pre>
++But the Mummy will appreciate the lack of humidity
+</code></pre>
+
+<p>it shows us the difference between
+the last committed change
+and what&#39;s in the staging area.
+Let&#39;s save our changes:</p>
+
+<pre><code class="bash">$ git commit -m &quot;Discuss concerns about Mars&#39; climate for Mummy&quot;
+</code></pre>
+
+<pre><code class="output">[master 005937f] Discuss concerns about Mars&#39; climate for Mummy
+ 1 file changed, 1 insertion(+)
+</code></pre>
+
 <p>check our status:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> status</code></pre>
-<pre class="output"><code># On branch master
-nothing to commit, working directory clean</code></pre>
-<p>and look at the history of what we’ve done so far:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> log</code></pre>
-<pre class="output"><code>commit 005937fbe2a98fb83f0ade869025dc2636b4dad5
+
+<pre><code class="bash">$ git status
+</code></pre>
+
+<pre><code class="output"># On branch master
+nothing to commit, working directory clean
+</code></pre>
+
+<p>and look at the history of what we&#39;ve done so far:</p>
+
+<pre><code class="bash">$ git log
+</code></pre>
+
+<pre><code class="output">commit 005937fbe2a98fb83f0ade869025dc2636b4dad5
 Author: Vlad Dracula &lt;vlad@tran.sylvan.ia&gt;
 Date:   Thu Aug 22 10:14:07 2013 -0400
 
@@ -214,47 +550,43 @@ commit f22b25e3233b4645dabd0d81e651fe074bd8e73b
 Author: Vlad Dracula &lt;vlad@tran.sylvan.ia&gt;
 Date:   Thu Aug 22 09:51:46 2013 -0400
 
-    Start notes on Mars as a base</code></pre>
-<p>To recap, when we want to add changes to our repository, we first need to add the changed files to the staging area (<code>git add</code>) and then commit the staged changes to the repository (<code>git commit</code>):</p>
-<div class="figure">
-<img src="fig/git-committing.svg" alt="The Git Commit Workflow" /><p class="caption">The Git Commit Workflow</p>
-</div>
-<section class="challenge panel panel-success">
-<div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pencil"></span>Committing Changes to Git</h2>
-</div>
-<div class="panel-body">
+    Start notes on Mars as a base
+</code></pre>
+
+<p>To recap, when we want to add changes to our repository,
+we first need to add the changed files to the staging area
+(<code>git add</code>) and then commit the staged changes to the
+repository (<code>git commit</code>):</p>
+
+<p><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4KCjxzdmcKICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIgogICB4bWxuczpjYz0iaHR0cDovL2NyZWF0aXZlY29tbW9ucy5vcmcvbnMjIgogICB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiCiAgIHhtbG5zOnN2Zz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgeG1sbnM6c29kaXBvZGk9Imh0dHA6Ly9zb2RpcG9kaS5zb3VyY2Vmb3JnZS5uZXQvRFREL3NvZGlwb2RpLTAuZHRkIgogICB4bWxuczppbmtzY2FwZT0iaHR0cDovL3d3dy5pbmtzY2FwZS5vcmcvbmFtZXNwYWNlcy9pbmtzY2FwZSIKICAgdmVyc2lvbj0iMS4xIgogICB4PSIwcHgiCiAgIHk9IjBweCIKICAgd2lkdGg9IjYyMnB4IgogICBoZWlnaHQ9IjM1NXB4IgogICB2aWV3Qm94PSIwIDAgNjIyIDM1NSIKICAgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgNjIyIDM1NSIKICAgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIKICAgaWQ9InN2ZzkyMTMiCiAgIGlua3NjYXBlOnZlcnNpb249IjAuOTEgcjEzNzI1IgogICBzb2RpcG9kaTpkb2NuYW1lPSJnaXQtY29tbWl0dGluZy5zdmciPjxtZXRhZGF0YQogICAgIGlkPSJtZXRhZGF0YTkzODAiPjxyZGY6UkRGPjxjYzpXb3JrCiAgICAgICAgIHJkZjphYm91dD0iIj48ZGM6Zm9ybWF0PmltYWdlL3N2Zyt4bWw8L2RjOmZvcm1hdD48ZGM6dHlwZQogICAgICAgICAgIHJkZjpyZXNvdXJjZT0iaHR0cDovL3B1cmwub3JnL2RjL2RjbWl0eXBlL1N0aWxsSW1hZ2UiIC8+PC9jYzpXb3JrPjwvcmRmOlJERj48L21ldGFkYXRhPjxkZWZzCiAgICAgaWQ9ImRlZnM5Mzc4IiAvPjxzb2RpcG9kaTpuYW1lZHZpZXcKICAgICBwYWdlY29sb3I9IiNmZmZmZmYiCiAgICAgYm9yZGVyY29sb3I9IiM2NjY2NjYiCiAgICAgYm9yZGVyb3BhY2l0eT0iMSIKICAgICBvYmplY3R0b2xlcmFuY2U9IjEwIgogICAgIGdyaWR0b2xlcmFuY2U9IjEwIgogICAgIGd1aWRldG9sZXJhbmNlPSIxMCIKICAgICBpbmtzY2FwZTpwYWdlb3BhY2l0eT0iMCIKICAgICBpbmtzY2FwZTpwYWdlc2hhZG93PSIyIgogICAgIGlua3NjYXBlOndpbmRvdy13aWR0aD0iMTM2MiIKICAgICBpbmtzY2FwZTp3aW5kb3ctaGVpZ2h0PSI3MjkiCiAgICAgaWQ9Im5hbWVkdmlldzkzNzYiCiAgICAgc2hvd2dyaWQ9InRydWUiCiAgICAgaW5rc2NhcGU6em9vbT0iMS40MTQyMTM2IgogICAgIGlua3NjYXBlOmN4PSIyNjMuMTAxODgiCiAgICAgaW5rc2NhcGU6Y3k9IjE0NC45NjQ2IgogICAgIGlua3NjYXBlOndpbmRvdy14PSIwIgogICAgIGlua3NjYXBlOndpbmRvdy15PSIxOCIKICAgICBpbmtzY2FwZTp3aW5kb3ctbWF4aW1pemVkPSIwIgogICAgIGlua3NjYXBlOmN1cnJlbnQtbGF5ZXI9InN2ZzkyMTMiPjxpbmtzY2FwZTpncmlkCiAgICAgICB0eXBlPSJ4eWdyaWQiCiAgICAgICBpZD0iZ3JpZDk0MjkiIC8+PC9zb2RpcG9kaTpuYW1lZHZpZXc+PGcKICAgICBpZD0iTGF5ZXJfNSI+PHBhdGgKICAgICAgIGZpbGw9IiNCNUI1QjUiCiAgICAgICBzdHJva2U9IiNGRkZGRkYiCiAgICAgICBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiCiAgICAgICBkPSJNNjEwLDIzYzAtOC4yODQtNi43MTYtMTUtMTUtMTVIMjEwYy04LjI4NCwwLTE1LDYuNzE2LTE1LDE1djI5NyAgIGMwLDguMjg0LDYuNzE2LDE1LDE1LDE1aDM4NWM4LjI4NCwwLDE1LTYuNzE2LDE1LTE1VjIzeiIKICAgICAgIGlkPSJwYXRoOTIxNiIgLz48cmVjdAogICAgICAgeD0iMjEwIgogICAgICAgeT0iMjEiCiAgICAgICBmaWxsPSJub25lIgogICAgICAgd2lkdGg9IjcwIgogICAgICAgaGVpZ2h0PSIyOCIKICAgICAgIGlkPSJyZWN0OTIxOCIgLz48dGV4dAogICAgICAgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAyMTAgMzMuNDE5OSkiCiAgICAgICBmb250LWZhbWlseT0iJ0NvbnNvbGFzJyIKICAgICAgIGZvbnQtc2l6ZT0iMTgiCiAgICAgICBpZD0idGV4dDkyMjAiPi5naXQ8L3RleHQ+CjwvZz48ZwogICAgIGlkPSJMYXllcl8zIj48ZwogICAgICAgaWQ9Imc5MjIzIj48bGluZWFyR3JhZGllbnQKICAgICAgICAgaWQ9IlNWR0lEXzFfIgogICAgICAgICBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIKICAgICAgICAgeDE9IjMzMS40OTkiCiAgICAgICAgIHkxPSIxNTMiCiAgICAgICAgIHgyPSIzMzEuNDk5IgogICAgICAgICB5Mj0iMjA4LjI0OCI+PHN0b3AKICAgICAgICAgICBvZmZzZXQ9IjAuMDk4MiIKICAgICAgICAgICBzdHlsZT0ic3RvcC1jb2xvcjojQzRDNEM0IgogICAgICAgICAgIGlkPSJzdG9wOTIyNiIgLz48c3RvcAogICAgICAgICAgIG9mZnNldD0iMC41MzI2IgogICAgICAgICAgIHN0eWxlPSJzdG9wLWNvbG9yOiM2ODY4NjgiCiAgICAgICAgICAgaWQ9InN0b3A5MjI4IiAvPjxzdG9wCiAgICAgICAgICAgb2Zmc2V0PSIxIgogICAgICAgICAgIHN0eWxlPSJzdG9wLWNvbG9yOiMwMDAwMDAiCiAgICAgICAgICAgaWQ9InN0b3A5MjMwIiAvPjwvbGluZWFyR3JhZGllbnQ+PHBhdGgKICAgICAgICAgZmlsbD0idXJsKCNTVkdJRF8xXykiCiAgICAgICAgIHN0cm9rZT0iIzIzMUYyMCIKICAgICAgICAgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIgogICAgICAgICBkPSJNMjgxLjQ1MywyMDcuMjE5YzAtOS4yNjQsMjIuNDA0LTE2Ljc3Nyw1MC4wNDctMTYuNzc3ICAgIHM1MC4wNDUsNy41MTQsNTAuMDQ1LDE2Ljc3N3YxLjAyOWMwLDAsMC0yLjExNSwwLTMuMTE3YzAtMS4wMDcsMC0zNS43NDQsMC0zNS43NDR2MC4zOTNjMC05LjI3LTIyLjQwMi0xNi43NzktNTAuMDQ1LTE2Ljc3OSAgICBzLTUwLjA0Nyw3LjUxLTUwLjA0NywxNi43Nzl2LTAuMzkzYzAsMCwwLDM0LjUxOSwwLDM1LjczMmMwLDEuMjA1LDAsMy4xMjksMCwzLjEyOVYyMDcuMjE5eiIKICAgICAgICAgaWQ9InBhdGg5MjMyIiAvPjxnCiAgICAgICAgIGlkPSJnOTIzNCI+PHBhdGgKICAgICAgICAgICBmaWxsPSIjRkZGRkZGIgogICAgICAgICAgIHN0cm9rZT0iIzIzMUYyMCIKICAgICAgICAgICBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiCiAgICAgICAgICAgZD0iTTM4MS41NDUsMTY5LjM4N2MwLDAsMCwzNC43MzcsMCwzNS43NDQgICAgIGMwLDEuMDAyLDAuMzU1LDMuMTE3LDAuMzU1LDMuMTE3YzAsOS4yNy0yMi43NTgsMTYuNzc5LTUwLjQsMTYuNzc5cy01MC40LTcuNTEtNTAuNC0xNi43NzljMCwwLDAuMzU0LTEuOTI0LDAuMzU0LTMuMTI5ICAgICBjMC0xLjIxNCwwLTM1LjczMiwwLTM1LjczMmMwLDkuMjczLDIyLjQwNCwxNi43ODQsNTAuMDQ3LDE2Ljc4NFMzODEuNTQ1LDE3OC42NiwzODEuNTQ1LDE2OS4zODd6IgogICAgICAgICAgIGlkPSJwYXRoOTIzNiIgLz48L2c+PC9nPjxnCiAgICAgICBpZD0iZzkyMzgiPjxwb2x5Z29uCiAgICAgICAgIGZpbGw9IiNGRkZGRkYiCiAgICAgICAgIHN0cm9rZT0iIzAwMDAwMCIKICAgICAgICAgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIgogICAgICAgICBwb2ludHM9IjM2OS43MTksMTQ5Ljk3OSAzMTAuNDExLDE0OS45NzkgMjk3LjIzNSwxNjQuNDczICAgICAzNTYuNTQyLDE2NC40NzMgICAiCiAgICAgICAgIGlkPSJwb2x5Z29uOTI0MCIgLz48bGluZQogICAgICAgICBmaWxsPSJub25lIgogICAgICAgICBzdHJva2U9IiM3MEJGNDEiCiAgICAgICAgIHN0cm9rZS13aWR0aD0iMiIKICAgICAgICAgeDE9IjMxMC40MTEiCiAgICAgICAgIHkxPSIxNTUuOTA4IgogICAgICAgICB4Mj0iMzU5LjE2NSIKICAgICAgICAgeTI9IjE1NS45MDgiCiAgICAgICAgIGlkPSJsaW5lOTI0MiIgLz48L2c+PGcKICAgICAgIGlkPSJnOTI0NCI+PHBvbHlnb24KICAgICAgICAgZmlsbD0iI0ZGRkZGRiIKICAgICAgICAgc3Ryb2tlPSIjMDAwMDAwIgogICAgICAgICBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiCiAgICAgICAgIHBvaW50cz0iMzcxLjAyOSwxNjUuNzUzIDMxMS43MjIsMTY1Ljc1MyAyOTguNTQ2LDE4MC4yNDcgICAgIDM1Ny44NTMsMTgwLjI0NyAgICIKICAgICAgICAgaWQ9InBvbHlnb245MjQ2IiAvPjxsaW5lCiAgICAgICAgIGZpbGw9Im5vbmUiCiAgICAgICAgIHN0cm9rZT0iI0IyODVCQyIKICAgICAgICAgc3Ryb2tlLXdpZHRoPSIyIgogICAgICAgICB4MT0iMzEyLjcyMiIKICAgICAgICAgeTE9IjE2OS42ODMiCiAgICAgICAgIHgyPSIzNjEuNDc2IgogICAgICAgICB5Mj0iMTY5LjY4MyIKICAgICAgICAgaWQ9ImxpbmU5MjQ4IiAvPjxsaW5lCiAgICAgICAgIGZpbGw9Im5vbmUiCiAgICAgICAgIHN0cm9rZT0iI0IyODVCQyIKICAgICAgICAgc3Ryb2tlLXdpZHRoPSIyIgogICAgICAgICB4MT0iMzA4LjcyMiIKICAgICAgICAgeTE9IjE3NC42ODMiCiAgICAgICAgIHgyPSIzNTcuNDc2IgogICAgICAgICB5Mj0iMTc0LjY4MyIKICAgICAgICAgaWQ9ImxpbmU5MjUwIiAvPjwvZz48L2c+PGcKICAgICBpZD0iTGF5ZXJfNCI+PGxpbmVhckdyYWRpZW50CiAgICAgICBpZD0iU1ZHSURfMl8iCiAgICAgICBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIKICAgICAgIHgxPSI1NDcuMzkxNiIKICAgICAgIHkxPSIxNDQuNjYwMiIKICAgICAgIHgyPSI1NDcuMzkxNiIKICAgICAgIHkyPSIxOTkuOTEyMSI+PHN0b3AKICAgICAgICAgb2Zmc2V0PSIwLjA5ODIiCiAgICAgICAgIHN0eWxlPSJzdG9wLWNvbG9yOiNDNEM0QzQiCiAgICAgICAgIGlkPSJzdG9wOTI1NCIgLz48c3RvcAogICAgICAgICBvZmZzZXQ9IjAuNTMyNiIKICAgICAgICAgc3R5bGU9InN0b3AtY29sb3I6IzY4Njg2OCIKICAgICAgICAgaWQ9InN0b3A5MjU2IiAvPjxzdG9wCiAgICAgICAgIG9mZnNldD0iMSIKICAgICAgICAgc3R5bGU9InN0b3AtY29sb3I6IzAwMDAwMCIKICAgICAgICAgaWQ9InN0b3A5MjU4IiAvPjwvbGluZWFyR3JhZGllbnQ+PHBhdGgKICAgICAgIGZpbGw9InVybCgjU1ZHSURfMl8pIgogICAgICAgc3Ryb2tlPSIjMjMxRjIwIgogICAgICAgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIgogICAgICAgZD0iTTQ5Ny4zNDUsMTk4Ljg4M2MwLTkuMjY4LDIyLjQwNy0xNi43ODEsNTAuMDQ3LTE2Ljc4MSAgIGMyNy42NDEsMCw1MC4wNDcsNy41MTQsNTAuMDQ3LDE2Ljc4MXYxLjAyOWMwLDAsMC0yLjExNywwLTMuMTJzMC0zNS43MzksMC0zNS43Mzl2MC4zODljMC05LjI2OC0yMi40MDYtMTYuNzgxLTUwLjA0Ny0xNi43ODEgICBjLTI3LjY0LDAtNTAuMDQ3LDcuNTE0LTUwLjA0NywxNi43ODF2LTAuMzg5YzAsMCwwLDM0LjUyLDAsMzUuNzI5czAsMy4xMzEsMCwzLjEzMVYxOTguODgzeiIKICAgICAgIGlkPSJwYXRoOTI2MCIgLz48ZwogICAgICAgaWQ9Imc5MjYyIj48cGF0aAogICAgICAgICBmaWxsPSIjRkZGRkZGIgogICAgICAgICBzdHJva2U9IiMyMzFGMjAiCiAgICAgICAgIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIKICAgICAgICAgZD0iTTU5Ny4yMzUsMjM4LjI4M2MwLDAsMCwzNC43MzgsMCwzNS43NHMwLjM1NCwzLjEyMSwwLjM1NCwzLjEyMSAgICBjMCw5LjI2OC0yMi43NiwxNi43NzktNTAuNCwxNi43NzljLTI3LjY0LDAtNTAuMzk5LTcuNTEyLTUwLjM5OS0xNi43NzljMCwwLDAuMzUzLTEuOTI0LDAuMzUzLTMuMTMzczAtMzUuNzI5LDAtMzUuNzI5ICAgIGMwLDkuMjY4LDIyLjQwNywxNi43ODEsNTAuMDQ3LDE2Ljc4MUM1NzQuODI5LDI1NS4wNjQsNTk3LjIzNSwyNDcuNTUxLDU5Ny4yMzUsMjM4LjI4M3oiCiAgICAgICAgIGlkPSJwYXRoOTI2NCIgLz48L2c+PGcKICAgICAgIGlkPSJnOTI2NiI+PHBhdGgKICAgICAgICAgZmlsbD0iI0ZGRkZGRiIKICAgICAgICAgc3Ryb2tlPSIjMjMxRjIwIgogICAgICAgICBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiCiAgICAgICAgIGQ9Ik01OTcuMjM1LDE5OS42MDJjMCwwLDAsMzQuNzM2LDAsMzUuNzM4czAuMzU0LDMuMTIxLDAuMzU0LDMuMTIxICAgIGMwLDkuMjY4LTIyLjc2LDE2Ljc3OS01MC40LDE2Ljc3OWMtMjcuNjQsMC01MC4zOTktNy41MTItNTAuMzk5LTE2Ljc3OWMwLDAsMC4zNTMtMS45MjQsMC4zNTMtMy4xMzNzMC0zNS43MjcsMC0zNS43MjcgICAgYzAsOS4yNjgsMjIuNDA3LDE2Ljc3OSw1MC4wNDcsMTYuNzc5QzU3NC44MjksMjE2LjM4MSw1OTcuMjM1LDIwOC44NjksNTk3LjIzNSwxOTkuNjAyeiIKICAgICAgICAgaWQ9InBhdGg5MjY4IiAvPjwvZz48ZwogICAgICAgaWQ9Imc5MjcwIj48cGF0aAogICAgICAgICBmaWxsPSIjRkZGRkZGIgogICAgICAgICBzdHJva2U9IiMyMzFGMjAiCiAgICAgICAgIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIKICAgICAgICAgZD0iTTU5Ny4yMzUsMTYwLjYyOWMwLDAsMCwzNC43MzYsMCwzNS43MzggICAgYzAsMS4wMDMsMC4zNTQsMy4xMjEsMC4zNTQsMy4xMjFjMCw5LjI2OC0yMi43NiwxNi43ODEtNTAuNCwxNi43ODFjLTI3LjY0LDAtNTAuMzk5LTcuNTE0LTUwLjM5OS0xNi43ODEgICAgYzAsMCwwLjM1My0xLjkyMywwLjM1My0zLjEzMnMwLTM1LjcyOCwwLTM1LjcyOGMwLDkuMjY4LDIyLjQwNywxNi43NzksNTAuMDQ3LDE2Ljc3OSAgICBDNTc0LjgyOSwxNzcuNDA4LDU5Ny4yMzUsMTY5Ljg5Niw1OTcuMjM1LDE2MC42Mjl6IgogICAgICAgICBpZD0icGF0aDkyNzIiIC8+PC9nPjxnCiAgICAgICBpZD0iZzkyNzQiPjxwb2x5Z29uCiAgICAgICAgIGZpbGw9IiNGRkZGRkYiCiAgICAgICAgIHN0cm9rZT0iIzAwMDAwMCIKICAgICAgICAgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIgogICAgICAgICBwb2ludHM9IjU4NC4wODYsMTUxLjc3NCA1MjQuNzc4LDE1MS43NzQgNTExLjYwMywxNjYuMjY5ICAgICA1NzAuOTA5LDE2Ni4yNjkgICAiCiAgICAgICAgIGlkPSJwb2x5Z29uOTI3NiIgLz48bGluZQogICAgICAgICBmaWxsPSJub25lIgogICAgICAgICBzdHJva2U9IiNCMjg1QkMiCiAgICAgICAgIHN0cm9rZS13aWR0aD0iMiIKICAgICAgICAgeDE9IjUyNS43NzgiCiAgICAgICAgIHkxPSIxNTUuNzA0IgogICAgICAgICB4Mj0iNTc0LjUzMiIKICAgICAgICAgeTI9IjE1NS43MDQiCiAgICAgICAgIGlkPSJsaW5lOTI3OCIgLz48bGluZQogICAgICAgICBmaWxsPSJub25lIgogICAgICAgICBzdHJva2U9IiNCMjg1QkMiCiAgICAgICAgIHN0cm9rZS13aWR0aD0iMiIKICAgICAgICAgeDE9IjUyMS43NzgiCiAgICAgICAgIHkxPSIxNjAuNzA0IgogICAgICAgICB4Mj0iNTcwLjUzMiIKICAgICAgICAgeTI9IjE2MC43MDQiCiAgICAgICAgIGlkPSJsaW5lOTI4MCIgLz48L2c+PGcKICAgICAgIGlkPSJnOTI4MiI+PHBvbHlnb24KICAgICAgICAgZmlsbD0iI0ZGRkZGRiIKICAgICAgICAgc3Ryb2tlPSIjMDAwMDAwIgogICAgICAgICBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiCiAgICAgICAgIHBvaW50cz0iNTgyLjc3NSwxMzYgNTIzLjQ2OCwxMzYgNTEwLjI5MiwxNTAuNDk0ICAgICA1NjkuNTk5LDE1MC40OTQgICAiCiAgICAgICAgIGlkPSJwb2x5Z29uOTI4NCIgLz48bGluZQogICAgICAgICBmaWxsPSJub25lIgogICAgICAgICBzdHJva2U9IiM3MEJGNDEiCiAgICAgICAgIHN0cm9rZS13aWR0aD0iMiIKICAgICAgICAgeDE9IjUyMy40NjgiCiAgICAgICAgIHkxPSIxNDEuOTMiCiAgICAgICAgIHgyPSI1NzIuMjIyIgogICAgICAgICB5Mj0iMTQxLjkzIgogICAgICAgICBpZD0ibGluZTkyODYiIC8+PC9nPjwvZz48ZwogICAgIGlkPSJMYXllcl8xIj48ZwogICAgICAgaWQ9Imc5Mjg5Ij48cmVjdAogICAgICAgICB4PSIyNCIKICAgICAgICAgeT0iMjIiCiAgICAgICAgIGZpbGw9IiNEQ0RFRTAiCiAgICAgICAgIHdpZHRoPSIxMDAiCiAgICAgICAgIGhlaWdodD0iMTI4IgogICAgICAgICBpZD0icmVjdDkyOTEiIC8+PHJlY3QKICAgICAgICAgeD0iMjQiCiAgICAgICAgIHk9IjIyIgogICAgICAgICBmaWxsPSJub25lIgogICAgICAgICBzdHJva2U9IiM4NTg4OEQiCiAgICAgICAgIHN0cm9rZS13aWR0aD0iMiIKICAgICAgICAgd2lkdGg9IjEwMCIKICAgICAgICAgaGVpZ2h0PSIxMjgiCiAgICAgICAgIGlkPSJyZWN0OTI5MyIgLz48bGluZQogICAgICAgICBmaWxsPSJub25lIgogICAgICAgICBzdHJva2U9IiMwMDAwMDAiCiAgICAgICAgIHN0cm9rZS13aWR0aD0iMiIKICAgICAgICAgeDE9IjM3IgogICAgICAgICB5MT0iNDIiCiAgICAgICAgIHgyPSIxMTEiCiAgICAgICAgIHkyPSI0MiIKICAgICAgICAgaWQ9ImxpbmU5Mjk1IiAvPjxsaW5lCiAgICAgICAgIGZpbGw9Im5vbmUiCiAgICAgICAgIHN0cm9rZT0iIzAwMDAwMCIKICAgICAgICAgc3Ryb2tlLXdpZHRoPSIyIgogICAgICAgICB4MT0iMzciCiAgICAgICAgIHkxPSI0OCIKICAgICAgICAgeDI9IjExMSIKICAgICAgICAgeTI9IjQ4IgogICAgICAgICBpZD0ibGluZTkyOTciIC8+PGxpbmUKICAgICAgICAgZmlsbD0ibm9uZSIKICAgICAgICAgc3Ryb2tlPSIjMDAwMDAwIgogICAgICAgICBzdHJva2Utd2lkdGg9IjIiCiAgICAgICAgIHgxPSIzNyIKICAgICAgICAgeTE9IjU0IgogICAgICAgICB4Mj0iMTExIgogICAgICAgICB5Mj0iNTQiCiAgICAgICAgIGlkPSJsaW5lOTI5OSIgLz48bGluZQogICAgICAgICBmaWxsPSJub25lIgogICAgICAgICBzdHJva2U9IiM3MEJGNDEiCiAgICAgICAgIHN0cm9rZS13aWR0aD0iMiIKICAgICAgICAgeDE9IjM3IgogICAgICAgICB5MT0iNjYiCiAgICAgICAgIHgyPSIxMTEiCiAgICAgICAgIHkyPSI2NiIKICAgICAgICAgaWQ9ImxpbmU5MzAxIiAvPjwvZz48cmVjdAogICAgICAgeD0iMjcuNjI4IgogICAgICAgeT0iMTM2IgogICAgICAgZmlsbD0ibm9uZSIKICAgICAgIHdpZHRoPSI5Mi43NDMiCiAgICAgICBoZWlnaHQ9IjE0IgogICAgICAgaWQ9InJlY3Q5MzAzIiAvPjx0ZXh0CiAgICAgICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDQ0LjMxMDUgMTQ0LjI4MDMpIgogICAgICAgZm9udC1mYW1pbHk9IidDb25zb2xhcyciCiAgICAgICBmb250LXNpemU9IjEyIgogICAgICAgaWQ9InRleHQ5MzA1Ij5GSUxFMS50eHQ8L3RleHQ+CjxnCiAgICAgICBpZD0iZzkzMDciPjxyZWN0CiAgICAgICAgIHg9IjI0IgogICAgICAgICB5PSIyMDMiCiAgICAgICAgIGZpbGw9IiNEQ0RFRTAiCiAgICAgICAgIHdpZHRoPSIxMDAiCiAgICAgICAgIGhlaWdodD0iMTI4IgogICAgICAgICBpZD0icmVjdDkzMDkiIC8+PHJlY3QKICAgICAgICAgeD0iMjQiCiAgICAgICAgIHk9IjIwMyIKICAgICAgICAgZmlsbD0ibm9uZSIKICAgICAgICAgc3Ryb2tlPSIjODU4ODhEIgogICAgICAgICBzdHJva2Utd2lkdGg9IjIiCiAgICAgICAgIHdpZHRoPSIxMDAiCiAgICAgICAgIGhlaWdodD0iMTI4IgogICAgICAgICBpZD0icmVjdDkzMTEiIC8+PGxpbmUKICAgICAgICAgZmlsbD0ibm9uZSIKICAgICAgICAgc3Ryb2tlPSIjMDAwMDAwIgogICAgICAgICBzdHJva2Utd2lkdGg9IjIiCiAgICAgICAgIHgxPSIzNyIKICAgICAgICAgeTE9IjIyMyIKICAgICAgICAgeDI9IjExMSIKICAgICAgICAgeTI9IjIyMyIKICAgICAgICAgaWQ9ImxpbmU5MzEzIiAvPjxsaW5lCiAgICAgICAgIGZpbGw9Im5vbmUiCiAgICAgICAgIHN0cm9rZT0iIzAwMDAwMCIKICAgICAgICAgc3Ryb2tlLXdpZHRoPSIyIgogICAgICAgICB4MT0iMzciCiAgICAgICAgIHkxPSIyMjkiCiAgICAgICAgIHgyPSIxMTEiCiAgICAgICAgIHkyPSIyMjkiCiAgICAgICAgIGlkPSJsaW5lOTMxNSIgLz48bGluZQogICAgICAgICBmaWxsPSJub25lIgogICAgICAgICBzdHJva2U9IiMwMDAwMDAiCiAgICAgICAgIHN0cm9rZS13aWR0aD0iMiIKICAgICAgICAgeDE9IjM3IgogICAgICAgICB5MT0iMjM1IgogICAgICAgICB4Mj0iMTExIgogICAgICAgICB5Mj0iMjM1IgogICAgICAgICBpZD0ibGluZTkzMTciIC8+PGxpbmUKICAgICAgICAgZmlsbD0ibm9uZSIKICAgICAgICAgc3Ryb2tlPSIjMDAwMDAwIgogICAgICAgICBzdHJva2Utd2lkdGg9IjIiCiAgICAgICAgIHgxPSIzNyIKICAgICAgICAgeTE9IjI2NC41MTQiCiAgICAgICAgIHgyPSIxMTEiCiAgICAgICAgIHkyPSIyNjQuNTE0IgogICAgICAgICBpZD0ibGluZTkzMTkiIC8+PGxpbmUKICAgICAgICAgZmlsbD0ibm9uZSIKICAgICAgICAgc3Ryb2tlPSIjMDAwMDAwIgogICAgICAgICBzdHJva2Utd2lkdGg9IjIiCiAgICAgICAgIHgxPSIzNyIKICAgICAgICAgeTE9IjI3MC41MTQiCiAgICAgICAgIHgyPSIxMTEiCiAgICAgICAgIHkyPSIyNzAuNTE0IgogICAgICAgICBpZD0ibGluZTkzMjEiIC8+PGxpbmUKICAgICAgICAgZmlsbD0ibm9uZSIKICAgICAgICAgc3Ryb2tlPSIjMDAwMDAwIgogICAgICAgICBzdHJva2Utd2lkdGg9IjIiCiAgICAgICAgIHgxPSIzNyIKICAgICAgICAgeTE9IjI3Ni41MTQiCiAgICAgICAgIHgyPSIxMTEiCiAgICAgICAgIHkyPSIyNzYuNTE0IgogICAgICAgICBpZD0ibGluZTkzMjMiIC8+PGxpbmUKICAgICAgICAgZmlsbD0ibm9uZSIKICAgICAgICAgc3Ryb2tlPSIjQjI4NUJDIgogICAgICAgICBzdHJva2Utd2lkdGg9IjIiCiAgICAgICAgIHgxPSIzNyIKICAgICAgICAgeTE9IjI0NyIKICAgICAgICAgeDI9IjExMSIKICAgICAgICAgeTI9IjI0NyIKICAgICAgICAgaWQ9ImxpbmU5MzI1IiAvPjxsaW5lCiAgICAgICAgIGZpbGw9Im5vbmUiCiAgICAgICAgIHN0cm9rZT0iI0IyODVCQyIKICAgICAgICAgc3Ryb2tlLXdpZHRoPSIyIgogICAgICAgICB4MT0iMzciCiAgICAgICAgIHkxPSIyNTMiCiAgICAgICAgIHgyPSIxMTEiCiAgICAgICAgIHkyPSIyNTMiCiAgICAgICAgIGlkPSJsaW5lOTMyNyIgLz48cmVjdAogICAgICAgICB4PSIyNy42MjgiCiAgICAgICAgIHk9IjMxNyIKICAgICAgICAgZmlsbD0ibm9uZSIKICAgICAgICAgd2lkdGg9IjkyLjc0MyIKICAgICAgICAgaGVpZ2h0PSIxNCIKICAgICAgICAgaWQ9InJlY3Q5MzI5IiAvPjx0ZXh0CiAgICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgNDQuMzEwNSAzMjUuMjgwMykiCiAgICAgICAgIGZvbnQtZmFtaWx5PSInQ29uc29sYXMnIgogICAgICAgICBmb250LXNpemU9IjEyIgogICAgICAgICBpZD0idGV4dDkzMzEiPkZJTEUyLnR4dDwvdGV4dD4KPC9nPjwvZz48cmVjdAogICAgIHN0eWxlPSJmaWxsOm5vbmUiCiAgICAgaWQ9InJlY3Q5MzY0IgogICAgIGhlaWdodD0iMTQiCiAgICAgd2lkdGg9Ijg1LjU0MiIKICAgICB5PSIxODMuMDY5IgogICAgIHg9IjM5NS4xOTUwMSIgLz48ZwogICAgIGlkPSJnOTQwMyI+PGcKICAgICAgIGlkPSJnOTM1OCI+PHJlY3QKICAgICAgICAgeD0iMzk5LjQ2NiIKICAgICAgICAgeT0iMTczLjc2ODAxIgogICAgICAgICB3aWR0aD0iNDUuOTU2MDAxIgogICAgICAgICBoZWlnaHQ9IjMwLjYwNCIKICAgICAgICAgaWQ9InJlY3Q5MzYwIgogICAgICAgICBzdHlsZT0iZmlsbDojNDViZWVlIiAvPjxwb2x5Z29uCiAgICAgICAgIHBvaW50cz0iNDgyLjYxNCwxODguMTYzIDQ0Mi4wNjIsMTU4LjU3MSA0NDIuMDYyLDIxOC42OTUgIgogICAgICAgICBpZD0icG9seWdvbjkzNjIiCiAgICAgICAgIHN0eWxlPSJmaWxsOiM0NWJlZWUiIC8+PC9nPjx0ZXh0CiAgICAgICB5PSIxOTEuMzQ5NTkiCiAgICAgICB4PSI0MDQuOTc4NDkiCiAgICAgICBmb250LXNpemU9IjEyIgogICAgICAgaWQ9InRleHQ5MzY2IgogICAgICAgc3R5bGU9ImZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkNvbnNvbGFzIj5naXQgY29tbWl0PC90ZXh0Pgo8L2c+PHJlY3QKICAgICBzdHlsZT0iZmlsbDpub25lIgogICAgIGlkPSJyZWN0OTM2OCIKICAgICBoZWlnaHQ9IjE3IgogICAgIHdpZHRoPSIxNDciCiAgICAgeT0iMjM1LjAxNDAxIgogICAgIHg9IjI1NyIgLz48dGV4dAogICAgIHN0eWxlPSJmb250LXNpemU6MTJweDtmb250LWZhbWlseTpIZWx2ZXRpY2EiCiAgICAgaWQ9InRleHQ5MzcwIgogICAgIGZvbnQtc2l6ZT0iMTIiCiAgICAgeD0iMjk3LjQ3NjU5IgogICAgIHk9IjI0My42NDE2Ij5zdGFnaW5nIGFyZWE8L3RleHQ+CjxyZWN0CiAgICAgc3R5bGU9ImZpbGw6bm9uZSIKICAgICBpZD0icmVjdDkzNzIiCiAgICAgaGVpZ2h0PSIxNyIKICAgICB3aWR0aD0iMTQ3IgogICAgIHk9IjMwNiIKICAgICB4PSI0NzUiIC8+PHRleHQKICAgICBzdHlsZT0iZm9udC1zaXplOjEycHg7Zm9udC1mYW1pbHk6SGVsdmV0aWNhIgogICAgIGlkPSJ0ZXh0OTM3NCIKICAgICBmb250LXNpemU9IjEyIgogICAgIHg9IjUyMi4xNTYxOSIKICAgICB5PSIzMTQuNjI3OSI+cmVwb3NpdG9yeTwvdGV4dD4KPGcKICAgICBpZD0iZzk0MzciPjxnCiAgICAgICB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjEyLjg0NjY5LDI4Ljk3MTgzNykiCiAgICAgICBpZD0iZzk0MTEiPjxyZWN0CiAgICAgICAgIHN0eWxlPSJmaWxsOiM0NWJlZWUiCiAgICAgICAgIGlkPSJyZWN0OTQxMyIKICAgICAgICAgaGVpZ2h0PSIzMC42MDQwMDQiCiAgICAgICAgIHdpZHRoPSI4OC41NzUzMSIKICAgICAgICAgeT0iMTczLjc2ODAxIgogICAgICAgICB4PSIzNTYuODQ2NjgiIC8+PHBvbHlnb24KICAgICAgICAgc3R5bGU9ImZpbGw6IzQ1YmVlZSIKICAgICAgICAgaWQ9InBvbHlnb245NDE1IgogICAgICAgICBwb2ludHM9IjQ0Mi4wNjIsMjE4LjY5NSA0ODIuNjE0LDE4OC4xNjMgNDQyLjA2MiwxNTguNTcxICIgLz48L2c+PHRleHQKICAgICAgIHN0eWxlPSJmb250LXNpemU6MTJweDtmb250LWZhbWlseTpDb25zb2xhcyIKICAgICAgIGlkPSJ0ZXh0OTQxNyIKICAgICAgIGZvbnQtc2l6ZT0iMTIiCiAgICAgICB4PSIxNDguMTMxNzkiCiAgICAgICB5PSIyMjAuMzIxNDMiPmdpdCBhZGQgRklMRTIudHh0PC90ZXh0Pgo8L2c+PGcKICAgICBpZD0iZzk0NDMiCiAgICAgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCwtODIpIj48ZwogICAgICAgaWQ9Imc5NDQ1IgogICAgICAgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTIxMi44NDY2OSwyOC45NzE4MzcpIj48cmVjdAogICAgICAgICB4PSIzNTYuODQ2NjgiCiAgICAgICAgIHk9IjE3My43NjgwMSIKICAgICAgICAgd2lkdGg9Ijg4LjU3NTMxIgogICAgICAgICBoZWlnaHQ9IjMwLjYwNDAwNCIKICAgICAgICAgaWQ9InJlY3Q5NDQ3IgogICAgICAgICBzdHlsZT0iZmlsbDojNDViZWVlIiAvPjxwb2x5Z29uCiAgICAgICAgIHBvaW50cz0iNDQyLjA2MiwxNTguNTcxIDQ0Mi4wNjIsMjE4LjY5NSA0ODIuNjE0LDE4OC4xNjMgIgogICAgICAgICBpZD0icG9seWdvbjk0NDkiCiAgICAgICAgIHN0eWxlPSJmaWxsOiM0NWJlZWUiIC8+PC9nPjx0ZXh0CiAgICAgICB5PSIyMjAuMzIxNDMiCiAgICAgICB4PSIxNDguMTMxNzkiCiAgICAgICBmb250LXNpemU9IjEyIgogICAgICAgaWQ9InRleHQ5NDUxIgogICAgICAgc3R5bGU9ImZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkNvbnNvbGFzIj5naXQgYWRkIEZJTEUxLnR4dDwvdGV4dD4KPC9nPjwvc3ZnPg==" alt="The Git Commit Workflow"/></p>
+
+<blockquote>
+<h2>Committing Changes to Git {.challenge}</h2>
+
 <p>Which command(s) below would save the changes of <code>myfile.txt</code> to my local Git repository?</p>
-<ol style="list-style-type: decimal">
-<li><pre><code>$ git commit -m &quot;my recent changes&quot;</code></pre></li>
+
+<ol>
+<li><pre><code>$ git commit -m &quot;my recent changes&quot;
+</code></pre></li>
 <li><pre><code>$ git init myfile.txt
-$ git commit -m &quot;my recent changes&quot;</code></pre></li>
+$ git commit -m &quot;my recent changes&quot;
+</code></pre></li>
 <li><pre><code>$ git add myfile.txt
-$ git commit -m &quot;my recent changes&quot;</code></pre></li>
-<li><pre><code>$ git commit -m myfile.txt &quot;my recent changes&quot;</code></pre></li>
+$ git commit -m &quot;my recent changes&quot;
+</code></pre></li>
+<li><pre><code>$ git commit -m myfile.txt &quot;my recent changes&quot;
+</code></pre></li>
 </ol>
-</div>
-</section>
-<section class="challenge panel panel-success">
-<div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pencil"></span><code>bio</code> Repository</h2>
-</div>
-<div class="panel-body">
-<p>Create a new Git repository on your computer called <code>bio</code>. Write a three-line biography for yourself in a file called <code>me.txt</code>, commit your changes, then modify one line, add a fourth line, and display the differences between its updated state and its original state.</p>
-</div>
-</section>
-        </div>
-      </div>
-      </article>
-      <div class="footer">
-        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
-        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/git-novice">Source</a>
-        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
-        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
-      </div>
-    </div>
-    <!-- Javascript placed at the end of the document so the pages load faster -->
-    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
-    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
-  </body>
+
+<h2><code>bio</code> Repository {.challenge}</h2>
+
+<p>Create a new Git repository on your computer called <code>bio</code>.
+Write a three-line biography for yourself in a file called <code>me.txt</code>,
+commit your changes,
+then modify one line, add a fourth line, and display the differences
+between its updated state and its original state.</p>
+</blockquote>
+
+</body>
+
 </html>

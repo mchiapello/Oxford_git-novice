@@ -1,161 +1,374 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="generator" content="pandoc">
-    <title>Software Carpentry: Version Control with Git</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
-    <link rel="stylesheet" type="text/css" href="css/swc.css" />
-    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
-    <meta charset="UTF-8" />
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body class="lesson">
-    <div class="container card">
-      <div class="banner">
-        <a href="http://software-carpentry.org" title="Software Carpentry">
-          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
-        </a>
-      </div>
-      <article>
-      <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-          <h1 class="title">Version Control with Git</h1>
-          <h2 class="subtitle">Exploring History</h2>
-<section class="objectives panel panel-warning">
-<div class="panel-heading">
-<h2><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
-</div>
-<div class="panel-body">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Learning Objectives {.objectives}</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<blockquote>
+<h2>Learning Objectives {.objectives}</h2>
+
 <ul>
-<li>Identify and use Git commit numbers.</li>
-<li>Compare various versions of tracked files.</li>
-<li>Restore old versions of files.</li>
+<li>  Identify and use Git commit numbers.</li>
+<li>  Compare various versions of tracked files.</li>
+<li>  Restore old versions of files.</li>
 </ul>
-</div>
-</section>
-<p>If we want to see what we changed at different steps, we can use <code>git diff</code> again, but with the notation <code>HEAD~1</code>, <code>HEAD~2</code>, and so on, to refer to old commits:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> diff HEAD~1 mars.txt</code></pre>
-<pre class="output"><code>diff --git a/mars.txt b/mars.txt
+</blockquote>
+
+<p>If we want to see what we changed at different steps, we can use <code>git diff</code>
+again, but with the notation <code>HEAD~1</code>, <code>HEAD~2</code>, and so on, to refer to old
+commits:</p>
+
+<pre><code class="bash">$ git diff HEAD~1 mars.txt
+</code></pre>
+
+<pre><code class="output">diff --git a/mars.txt b/mars.txt
 index 315bf3a..b36abfd 100644
 --- a/mars.txt
 +++ b/mars.txt
 @@ -1,2 +1,3 @@
  Cold and dry, but everything is my favorite color
  The two moons may be a problem for Wolfman
-+But the Mummy will appreciate the lack of humidity</code></pre>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> diff HEAD~2 mars.txt</code></pre>
-<pre class="output"><code>diff --git a/mars.txt b/mars.txt
++But the Mummy will appreciate the lack of humidity
+</code></pre>
+
+<pre><code class="bash">$ git diff HEAD~2 mars.txt
+</code></pre>
+
+<pre><code class="output">diff --git a/mars.txt b/mars.txt
 index df0654a..b36abfd 100644
 --- a/mars.txt
 +++ b/mars.txt
 @@ -1 +1,3 @@
  Cold and dry, but everything is my favorite color
 +The two moons may be a problem for Wolfman
-+But the Mummy will appreciate the lack of humidity</code></pre>
-<p>In this way, we can build up a chain of commits. The most recent end of the chain is referred to as <code>HEAD</code>; we can refer to previous commits using the <code>~</code> notation, so <code>HEAD~1</code> (pronounced “head minus one”) means “the previous commit”, while <code>HEAD~123</code> goes back 123 commits from where we are now.</p>
-<p>We can also refer to commits using those long strings of digits and letters that <code>git log</code> displays. These are unique IDs for the changes, and “unique” really does mean unique: every change to any set of files on any computer has a unique 40-character identifier. Our first commit was given the ID f22b25e3233b4645dabd0d81e651fe074bd8e73b, so let’s try this:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> diff f22b25e3233b4645dabd0d81e651fe074bd8e73b mars.txt</code></pre>
-<pre class="output"><code>diff --git a/mars.txt b/mars.txt
++But the Mummy will appreciate the lack of humidity
+</code></pre>
+
+<p>In this way,
+we can build up a chain of commits.
+The most recent end of the chain is referred to as <code>HEAD</code>;
+we can refer to previous commits using the <code>~</code> notation,
+so <code>HEAD~1</code> (pronounced &ldquo;head minus one&rdquo;)
+means &ldquo;the previous commit&rdquo;,
+while <code>HEAD~123</code> goes back 123 commits from where we are now.</p>
+
+<p>We can also refer to commits using
+those long strings of digits and letters
+that <code>git log</code> displays.
+These are unique IDs for the changes,
+and &ldquo;unique&rdquo; really does mean unique:
+every change to any set of files on any computer
+has a unique 40-character identifier.
+Our first commit was given the ID
+f22b25e3233b4645dabd0d81e651fe074bd8e73b,
+so let&#39;s try this:</p>
+
+<pre><code class="bash">$ git diff f22b25e3233b4645dabd0d81e651fe074bd8e73b mars.txt
+</code></pre>
+
+<pre><code class="output">diff --git a/mars.txt b/mars.txt
 index df0654a..b36abfd 100644
 --- a/mars.txt
 +++ b/mars.txt
 @@ -1 +1,3 @@
  Cold and dry, but everything is my favorite color
 +The two moons may be a problem for Wolfman
-+But the Mummy will appreciate the lack of humidity</code></pre>
-<p>That’s the right answer, but typing out random 40-character strings is annoying, so Git lets us use just the first few characters:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> diff f22b25e mars.txt</code></pre>
-<pre class="output"><code>diff --git a/mars.txt b/mars.txt
++But the Mummy will appreciate the lack of humidity
+</code></pre>
+
+<p>That&#39;s the right answer,
+but typing out random 40-character strings is annoying,
+so Git lets us use just the first few characters:</p>
+
+<pre><code class="bash">$ git diff f22b25e mars.txt
+</code></pre>
+
+<pre><code class="output">diff --git a/mars.txt b/mars.txt
 index df0654a..b36abfd 100644
 --- a/mars.txt
 +++ b/mars.txt
 @@ -1 +1,3 @@
  Cold and dry, but everything is my favorite color
 +The two moons may be a problem for Wolfman
-+But the Mummy will appreciate the lack of humidity</code></pre>
-<p>All right! So we can save changes to files and see what we’ve changed—now how can we restore older versions of things? Let’s suppose we accidentally overwrite our file:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">nano</span> mars.txt
-$ <span class="kw">cat</span> mars.txt</code></pre>
-<pre class="output"><code>We will need to manufacture our own oxygen</code></pre>
-<p><code>git status</code> now tells us that the file has been changed, but those changes haven’t been staged:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> status</code></pre>
-<pre class="output"><code># On branch master
++But the Mummy will appreciate the lack of humidity
+</code></pre>
+
+<p>All right! So
+we can save changes to files and see what we&#39;ve changed&mdash;now how
+can we restore older versions of things?
+Let&#39;s suppose we accidentally overwrite our file:</p>
+
+<pre><code class="bash">$ nano mars.txt
+$ cat mars.txt
+</code></pre>
+
+<pre><code class="output">We will need to manufacture our own oxygen
+</code></pre>
+
+<p><code>git status</code> now tells us that the file has been changed,
+but those changes haven&#39;t been staged:</p>
+
+<pre><code class="bash">$ git status
+</code></pre>
+
+<pre><code class="output"># On branch master
 # Changes not staged for commit:
 #   (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)
 #   (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)
 #
 #   modified:   mars.txt
 #
-no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)</code></pre>
-<p>We can put things back the way they were by using <code>git checkout</code>:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> checkout HEAD mars.txt
-$ <span class="kw">cat</span> mars.txt</code></pre>
-<pre class="output"><code>Cold and dry, but everything is my favorite color
+no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)
+</code></pre>
+
+<p>We can put things back the way they were
+by using <code>git checkout</code>:</p>
+
+<pre><code class="bash">$ git checkout HEAD mars.txt
+$ cat mars.txt
+</code></pre>
+
+<pre><code class="output">Cold and dry, but everything is my favorite color
 The two moons may be a problem for Wolfman
-But the Mummy will appreciate the lack of humidity</code></pre>
-<p>As you might guess from its name, <code>git checkout</code> checks out (i.e., restores) an old version of a file. In this case, we’re telling Git that we want to recover the version of the file recorded in <code>HEAD</code>, which is the last saved commit. If we want to go back even further, we can use a commit identifier instead:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> checkout f22b25e mars.txt</code></pre>
-<p>It’s important to remember that we must use the commit number that identifies the state of the repository <em>before</em> the change we’re trying to undo. A common mistake is to use the number of the commit in which we made the change we’re trying to get rid of. In the example below, we want to retrieve the state from before the most recent commit (<code>HEAD~1</code>), which is commit <code>f22b25e</code>:</p>
-<div class="figure">
-<img src="fig/git-checkout.svg" alt="Git Checkout" /><p class="caption">Git Checkout</p>
-</div>
+But the Mummy will appreciate the lack of humidity
+</code></pre>
+
+<p>As you might guess from its name,
+<code>git checkout</code> checks out (i.e., restores) an old version of a file.
+In this case,
+we&#39;re telling Git that we want to recover the version of the file recorded in <code>HEAD</code>,
+which is the last saved commit.
+If we want to go back even further,
+we can use a commit identifier instead:</p>
+
+<pre><code class="bash">$ git checkout f22b25e mars.txt
+</code></pre>
+
+<p>It&#39;s important to remember that
+we must use the commit number that identifies the state of the repository
+<em>before</em> the change we&#39;re trying to undo.
+A common mistake is to use the number of
+the commit in which we made the change we&#39;re trying to get rid of.
+In the example below, we want to retrieve the state from before the most
+recent commit (<code>HEAD~1</code>), which is commit <code>f22b25e</code>:</p>
+
+<p><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSI2MjJweCINCgkgaGVpZ2h0PSIzNTVweCIgdmlld0JveD0iMCAwIDYyMiAzNTUiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYyMiAzNTUiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGcgaWQ9IkxheWVyXzUiPg0KCTxwYXRoIGZpbGw9IiNCNUI1QjUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBkPSJNMjkwLDQzYzAtOC4yODQtNi43MTYtMTUtMTUtMTVINjBjLTguMjg0LDAtMTUsNi43MTYtMTUsMTV2MjU3DQoJCWMwLDguMjg0LDYuNzE2LDE1LDE1LDE1aDIxNWM4LjI4NCwwLDE1LTYuNzE2LDE1LTE1VjQzeiIvPg0KCTxyZWN0IHg9IjYwIiB5PSI0MSIgZmlsbD0ibm9uZSIgd2lkdGg9IjcwIiBoZWlnaHQ9IjI4Ii8+DQoJPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSA2MCA1My40MTk5KSIgZm9udC1mYW1pbHk9IidDb25zb2xhcyciIGZvbnQtc2l6ZT0iMTgiPi5naXQ8L3RleHQ+DQo8L2c+DQo8ZyBpZD0iTGF5ZXJfMyI+DQo8L2c+DQo8ZyBpZD0iTGF5ZXJfNCI+DQoJPGxpbmVhckdyYWRpZW50IGlkPSJTVkdJRF8xXyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIxNjcuMzkxMSIgeTE9Ijg0LjY2MDIiIHgyPSIxNjcuMzkxMSIgeTI9IjEzOS45MTI2Ij4NCgkJPHN0b3AgIG9mZnNldD0iMC4wOTgyIiBzdHlsZT0ic3RvcC1jb2xvcjojQzRDNEM0Ii8+DQoJCTxzdG9wICBvZmZzZXQ9IjAuNTMyNiIgc3R5bGU9InN0b3AtY29sb3I6IzY4Njg2OCIvPg0KCQk8c3RvcCAgb2Zmc2V0PSIxIiBzdHlsZT0ic3RvcC1jb2xvcjojMDAwMDAwIi8+DQoJPC9saW5lYXJHcmFkaWVudD4NCgk8cGF0aCBmaWxsPSJ1cmwoI1NWR0lEXzFfKSIgc3Ryb2tlPSIjMjMxRjIwIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIGQ9Ik0xMTcuMzQ1LDEzOC44ODNjMC05LjI2OCwyMi40MDctMTYuNzgxLDUwLjA0Ny0xNi43ODENCgkJYzI3LjY0MSwwLDUwLjA0Nyw3LjUxNCw1MC4wNDcsMTYuNzgxdjEuMDI5YzAsMCwwLTIuMTE3LDAtMy4xMnMwLTM1LjczOSwwLTM1LjczOXYwLjM4OWMwLTkuMjY4LTIyLjQwNi0xNi43ODEtNTAuMDQ3LTE2Ljc4MQ0KCQljLTI3LjY0LDAtNTAuMDQ3LDcuNTE0LTUwLjA0NywxNi43ODF2LTAuMzg5YzAsMCwwLDM0LjUyLDAsMzUuNzI5czAsMy4xMzEsMCwzLjEzMVYxMzguODgzeiIvPg0KCTxsaW5lYXJHcmFkaWVudCBpZD0iU1ZHSURfMl8iIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMTY3LjM5MTEiIHkxPSIxNTQuNjYwMiIgeDI9IjE2Ny4zOTExIiB5Mj0iMjA5LjkxMjEiPg0KCQk8c3RvcCAgb2Zmc2V0PSIwLjA5ODIiIHN0eWxlPSJzdG9wLWNvbG9yOiNDNEM0QzQiLz4NCgkJPHN0b3AgIG9mZnNldD0iMC41MzI2IiBzdHlsZT0ic3RvcC1jb2xvcjojNjg2ODY4Ii8+DQoJCTxzdG9wICBvZmZzZXQ9IjEiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMDAwMDAiLz4NCgk8L2xpbmVhckdyYWRpZW50Pg0KCTxwYXRoIGZpbGw9InVybCgjU1ZHSURfMl8pIiBzdHJva2U9IiMyMzFGMjAiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgZD0iTTExNy4zNDUsMjA4Ljg4M2MwLTkuMjY4LDIyLjQwNy0xNi43ODEsNTAuMDQ3LTE2Ljc4MQ0KCQljMjcuNjQxLDAsNTAuMDQ3LDcuNTE0LDUwLjA0NywxNi43ODF2MS4wMjljMCwwLDAtMi4xMTcsMC0zLjEyczAtMzUuNzM5LDAtMzUuNzM5djAuMzg5YzAtOS4yNjgtMjIuNDA2LTE2Ljc4MS01MC4wNDctMTYuNzgxDQoJCWMtMjcuNjQsMC01MC4wNDcsNy41MTQtNTAuMDQ3LDE2Ljc4MXYtMC4zODljMCwwLDAsMzQuNTIsMCwzNS43MjlzMCwzLjEzMSwwLDMuMTMxVjIwOC44ODN6Ii8+DQoJPGc+DQoJCTxwYXRoIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iIzIzMUYyMCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBkPSJNMjE3LjIzNSwyMDguMjgzYzAsMCwwLDM0LjczOCwwLDM1Ljc0czAuMzU0LDMuMTIxLDAuMzU0LDMuMTIxDQoJCQljMCw5LjI2OC0yMi43NiwxNi43NzktNTAuNCwxNi43NzljLTI3LjY0LDAtNTAuMzk5LTcuNTEyLTUwLjM5OS0xNi43NzljMCwwLDAuMzUzLTEuOTI0LDAuMzUzLTMuMTMzczAtMzUuNzI5LDAtMzUuNzI5DQoJCQljMCw5LjI2OCwyMi40MDcsMTYuNzgxLDUwLjA0NywxNi43ODFDMTk0LjgyOSwyMjUuMDY0LDIxNy4yMzUsMjE3LjU1MSwyMTcuMjM1LDIwOC4yODN6Ii8+DQoJPC9nPg0KCTxnPg0KCQk8cGF0aCBmaWxsPSIjRkZGRkZGIiBzdHJva2U9IiMyMzFGMjAiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgZD0iTTIxNy4yMzUsMTY5LjYwMmMwLDAsMCwzNC43MzYsMCwzNS43MzhzMC4zNTQsMy4xMjEsMC4zNTQsMy4xMjENCgkJCWMwLDkuMjY4LTIyLjc2LDE2Ljc3OS01MC40LDE2Ljc3OWMtMjcuNjQsMC01MC4zOTktNy41MTItNTAuMzk5LTE2Ljc3OWMwLDAsMC4zNTMtMS45MjQsMC4zNTMtMy4xMzNzMC0zNS43MjcsMC0zNS43MjcNCgkJCWMwLDkuMjY4LDIyLjQwNywxNi43NzksNTAuMDQ3LDE2Ljc3OUMxOTQuODI5LDE4Ni4zODEsMjE3LjIzNSwxNzguODY5LDIxNy4yMzUsMTY5LjYwMnoiLz4NCgk8L2c+DQoJPGc+DQoJCTxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBwb2ludHM9IjIwNC4wODYsMTY1Ljc3NCAxNDQuNzc4LDE2NS43NzQgMTMxLjYwMywxODAuMjY5IA0KCQkJMTkwLjkwOSwxODAuMjY5IAkJIi8+DQoJCTxsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0IyODVCQyIgc3Ryb2tlLXdpZHRoPSIyIiB4MT0iMTQ1Ljc3OCIgeTE9IjE2OS43MDQiIHgyPSIxOTQuNTMyIiB5Mj0iMTY5LjcwNCIvPg0KCQk8bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiNCMjg1QkMiIHN0cm9rZS13aWR0aD0iMiIgeDE9IjE0MS43NzgiIHkxPSIxNzQuNzA0IiB4Mj0iMTkwLjUzMiIgeTI9IjE3NC43MDQiLz4NCgk8L2c+DQoJPGc+DQoJCTxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBwb2ludHM9IjIwMi43NzUsMTU2IDE0My40NjgsMTU2IDEzMC4yOTIsMTcwLjQ5NCANCgkJCTE4OS41OTksMTcwLjQ5NCAJCSIvPg0KCQk8bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiM3MEJGNDEiIHN0cm9rZS13aWR0aD0iMiIgeDE9IjE0My40NjgiIHkxPSIxNjEuOTMiIHgyPSIxOTIuMjIyIiB5Mj0iMTYxLjkzIi8+DQoJPC9nPg0KCTxnPg0KCQk8cGF0aCBmaWxsPSIjRkZGRkZGIiBzdHJva2U9IiMyMzFGMjAiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgZD0iTTIxNy4yMzUsMTAwLjYyOWMwLDAsMCwzNC43MzYsMCwzNS43MzgNCgkJCWMwLDEuMDAzLDAuMzU0LDMuMTIxLDAuMzU0LDMuMTIxYzAsOS4yNjgtMjIuNzYsMTYuNzgxLTUwLjQsMTYuNzgxYy0yNy42NCwwLTUwLjM5OS03LjUxNC01MC4zOTktMTYuNzgxDQoJCQljMCwwLDAuMzUzLTEuOTIzLDAuMzUzLTMuMTMyczAtMzUuNzI4LDAtMzUuNzI4YzAsOS4yNjgsMjIuNDA3LDE2Ljc3OSw1MC4wNDcsMTYuNzc5DQoJCQlDMTk0LjgyOSwxMTcuNDA4LDIxNy4yMzUsMTA5Ljg5NiwyMTcuMjM1LDEwMC42Mjl6Ii8+DQoJPC9nPg0KPC9nPg0KPGcgaWQ9IkxheWVyXzEiPg0KCTxnPg0KCQk8Zz4NCgkJCTxyZWN0IHg9IjQ2MiIgeT0iMzUiIGZpbGw9IiNEQ0RFRTAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTI4Ii8+DQoJCQk8cmVjdCB4PSI0NjIiIHk9IjM1IiBmaWxsPSJub25lIiBzdHJva2U9IiM4NTg4OEQiIHN0cm9rZS13aWR0aD0iMiIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMjgiLz4NCgkJCTxsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyIiB4MT0iNDc1IiB5MT0iNTUiIHgyPSI1NDkiIHkyPSI1NSIvPg0KCQkJPGxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiIHgxPSI0NzUiIHkxPSI2MSIgeDI9IjU0OSIgeTI9IjYxIi8+DQoJCQk8bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMiIgeDE9IjQ3NSIgeTE9IjY3IiB4Mj0iNTQ5IiB5Mj0iNjciLz4NCgkJCTxsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzcwQkY0MSIgc3Ryb2tlLXdpZHRoPSIyIiB4MT0iNDc1IiB5MT0iNzkiIHgyPSI1NDkiIHkyPSI3OSIvPg0KCQk8L2c+DQoJCTxyZWN0IHg9IjQ2NS42MjkiIHk9IjE0OSIgZmlsbD0ibm9uZSIgd2lkdGg9IjkyLjc0MiIgaGVpZ2h0PSIxNCIvPg0KCQk8dGV4dCB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDQ4Mi4zMTA1IDE1Ny4yODAzKSIgZm9udC1mYW1pbHk9IidDb25zb2xhcyciIGZvbnQtc2l6ZT0iMTIiPkZJTEUxLnR4dDwvdGV4dD4NCgk8L2c+DQoJPGc+DQoJCTxyZWN0IHg9IjQ2MiIgeT0iMTc2IiBmaWxsPSIjRENERUUwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEyOCIvPg0KCQk8cmVjdCB4PSI0NjIiIHk9IjE3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjODU4ODhEIiBzdHJva2Utd2lkdGg9IjIiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTI4Ii8+DQoJCTxsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyIiB4MT0iNDc1IiB5MT0iMTk2IiB4Mj0iNTQ5IiB5Mj0iMTk2Ii8+DQoJCTxsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyIiB4MT0iNDc1IiB5MT0iMjAyIiB4Mj0iNTQ5IiB5Mj0iMjAyIi8+DQoJCTxsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyIiB4MT0iNDc1IiB5MT0iMjA4IiB4Mj0iNTQ5IiB5Mj0iMjA4Ii8+DQoJCTxsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyIiB4MT0iNDc1IiB5MT0iMjM3LjUxNCIgeDI9IjU0OSIgeTI9IjIzNy41MTQiLz4NCgkJPGxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiIHgxPSI0NzUiIHkxPSIyNDMuNTE0IiB4Mj0iNTQ5IiB5Mj0iMjQzLjUxNCIvPg0KCQk8bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMiIgeDE9IjQ3NSIgeTE9IjI0OS41MTQiIHgyPSI1NDkiIHkyPSIyNDkuNTE0Ii8+DQoJCTxsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0IyODVCQyIgc3Ryb2tlLXdpZHRoPSIyIiB4MT0iNDc1IiB5MT0iMjIwIiB4Mj0iNTQ5IiB5Mj0iMjIwIi8+DQoJCTxsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0IyODVCQyIgc3Ryb2tlLXdpZHRoPSIyIiB4MT0iNDc1IiB5MT0iMjI2IiB4Mj0iNTQ5IiB5Mj0iMjI2Ii8+DQoJCTxyZWN0IHg9IjQ2NS42MjkiIHk9IjI5MCIgZmlsbD0ibm9uZSIgd2lkdGg9IjkyLjc0MiIgaGVpZ2h0PSIxNCIvPg0KCQk8dGV4dCB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDQ4Mi4zMTA1IDI5OC4yODAzKSIgZm9udC1mYW1pbHk9IidDb25zb2xhcyciIGZvbnQtc2l6ZT0iMTIiPkZJTEUyLnR4dDwvdGV4dD4NCgk8L2c+DQoJPHJlY3QgeD0iNTQiIHk9IjEwNi44MDQiIGZpbGw9Im5vbmUiIHdpZHRoPSI1NC41MTIiIGhlaWdodD0iMTguMzYyIi8+DQoJPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSA2Ni4xMTQzIDExNi4zMDUyKSIgZmlsbD0iIzIzMUYyMCIgZm9udC1mYW1pbHk9IidDb25zb2xhcyciIGZvbnQtc2l6ZT0iMTMuNzY5OSI+SEVBRDwvdGV4dD4NCgk8cmVjdCB4PSI1NCIgeT0iMTgzLjY5NiIgZmlsbD0ibm9uZSIgd2lkdGg9IjU0LjUxMiIgaGVpZ2h0PSIxOC4zNjIiLz4NCgk8dGV4dCB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDU4LjU0MzUgMTkzLjE5NzMpIiBmaWxsPSIjMjMxRjIwIiBmb250LWZhbWlseT0iJ0NvbnNvbGFzJyIgZm9udC1zaXplPSIxMy43Njk5Ij5IRUFEfjE8L3RleHQ+DQoJPHJlY3QgeD0iNTQiIHk9IjIzMC44MzMiIGZpbGw9Im5vbmUiIHdpZHRoPSI1NC41MTIiIGhlaWdodD0iMTguMzYyIi8+DQoJPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSA1OC41NDM1IDI0MC4zMzQpIiBmaWxsPSIjMjMxRjIwIiBmb250LWZhbWlseT0iJ0NvbnNvbGFzJyIgZm9udC1zaXplPSIxMy43Njk5Ij5IRUFEfjI8L3RleHQ+DQoJPHJlY3QgeD0iMTQ0Ljc5OSIgeT0iMjQxLjkzOSIgZmlsbD0ibm9uZSIgd2lkdGg9IjQyLjcxMiIgaGVpZ2h0PSIxMC4yIi8+DQoJPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAxNDkuNTk0MiAyNDcuODc3OSkiIGZpbGw9IiMyMzFGMjAiIGZvbnQtZmFtaWx5PSInQ29uc29sYXMnIiBmb250LXNpemU9IjguNjA2MiI+ODkyMTM0ZjwvdGV4dD4NCgk8cmVjdCB4PSIxNDQuNzk5IiB5PSIyMDAuMDU2IiBmaWxsPSJub25lIiB3aWR0aD0iNDIuNzEyIiBoZWlnaHQ9IjEwLjIiLz4NCgk8dGV4dCB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDE0OS41OTQyIDIwNS45OTQxKSIgZmlsbD0iIzIzMUYyMCIgZm9udC1mYW1pbHk9IidDb25zb2xhcyciIGZvbnQtc2l6ZT0iOC42MDYyIj5mMjJiMjVlPC90ZXh0Pg0KCTxyZWN0IHg9IjE0NC43OTkiIHk9IjEyNy44NTkiIGZpbGw9Im5vbmUiIHdpZHRoPSI0Mi43MTIiIGhlaWdodD0iMTAuMiIvPg0KCTx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMTQ5LjU5NDIgMTMzLjc5NzkpIiBmaWxsPSIjMjMxRjIwIiBmb250LWZhbWlseT0iJ0NvbnNvbGFzJyIgZm9udC1zaXplPSI4LjYwNjIiPjNhNTRmNzY8L3RleHQ+DQo8L2c+DQo8ZyBpZD0iTGF5ZXJfMiI+DQoJPGc+DQoJCTxnPg0KCQkJPHJlY3QgeD0iMjY1LjQ2NiIgeT0iMTczLjc2OCIgZmlsbD0iIzQ1QkVFRSIgd2lkdGg9IjEzNS45NTYiIGhlaWdodD0iMzAuNjA0Ii8+DQoJCQk8cG9seWdvbiBmaWxsPSIjNDVCRUVFIiBwb2ludHM9IjM5OC4wNjIsMTU4LjU3MSAzOTguMDYyLDIxOC42OTUgNDM4LjYxNCwxODguMTYzIAkJCSIvPg0KCQk8L2c+DQoJCTxyZWN0IHg9IjI2NS42NjEiIHk9IjE3NS44ODIiIGZpbGw9Im5vbmUiIHdpZHRoPSIxNjguMDc2IiBoZWlnaHQ9IjM5LjM3NSIvPg0KCQk8dGV4dCB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDI4Ny4wMjE1IDE4NC4xNjIxKSI+PHRzcGFuIHg9IjAiIHk9IjAiIGZvbnQtZmFtaWx5PSInQ29uc29sYXMnIiBmb250LXNpemU9IjEyIj5naXQgY2hlY2tvdXQgSEVBRH4xPC90c3Bhbj48dHNwYW4geD0iNTYuMDgiIHk9IjkiIGZvbnQtZmFtaWx5PSInQ29uc29sYXMnIiBmb250LXNpemU9IjEyIj5vciA8L3RzcGFuPjx0c3BhbiB4PSItMy4yOTkiIHk9IjE4IiBmb250LWZhbWlseT0iJ0NvbnNvbGFzJyIgZm9udC1zaXplPSIxMiI+Z2l0IGNoZWNrb3V0IGYyMmIyNWU8L3RzcGFuPjwvdGV4dD4NCgk8L2c+DQoJPHJlY3QgeD0iOTIiIHk9IjI4NiIgZmlsbD0ibm9uZSIgd2lkdGg9IjE0NyIgaGVpZ2h0PSIxNyIvPg0KCTx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMTM5LjE1NjIgMjk0LjYyNzkpIiBmb250LWZhbWlseT0iJ0hlbHZldGljYSciIGZvbnQtc2l6ZT0iMTIiPnJlcG9zaXRvcnk8L3RleHQ+DQo8L2c+DQo8L3N2Zz4NCg==" alt="Git Checkout"/></p>
+
 <p>So, to put it all together:</p>
-<aside class="callout panel panel-info">
-<div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pushpin"></span>How Git works, in cartoon form</h2>
-</div>
-<div class="panel-body">
-<div class="figure">
-<img src="fig/git_staging.svg" alt="http://figshare.com/articles/How_Git_works_a_cartoon/1328266" /><p class="caption">http://figshare.com/articles/How_Git_works_a_cartoon/1328266</p>
-</div>
-</div>
-</aside>
-<aside class="callout panel panel-info">
-<div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pushpin"></span>Simplifying the Common Case</h2>
-</div>
-<div class="panel-body">
-<p>If you read the output of <code>git status</code> carefully, you’ll see that it includes this hint:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">(use</span> <span class="st">&quot;git checkout -- &lt;file&gt;...&quot;</span> to discard changes in working directory<span class="kw">)</span></code></pre>
-<p>As it says, <code>git checkout</code> without a version identifier restores files to the state saved in <code>HEAD</code>. The double dash <code>--</code> is needed to separate the names of the files being recovered from the command itself: without it, Git would try to use the name of the file as the commit identifier.</p>
-</div>
-</aside>
-<p>The fact that files can be reverted one by one tends to change the way people organize their work. If everything is in one large document, it’s hard (but not impossible) to undo changes to the introduction without also undoing changes made later to the conclusion. If the introduction and conclusion are stored in separate files, on the other hand, moving backward and forward in time becomes much easier.</p>
-<section class="challenge panel panel-success">
-<div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pencil"></span>Recovering Older Versions of a File</h2>
-</div>
-<div class="panel-body">
-<p>Jennifer has made changes to the Python script that she has been working on for weeks, and the modifications she made this morning “broke” the script and it no longer runs. She has spent ~ 1hr trying to fix it, with no luck…</p>
-<p>Luckily, she has been keeping track of her project’s versions using Git! Which commands below will let her recover the last committed version of her Python script called <code>data_cruncher.py</code>?</p>
-<ol style="list-style-type: decimal">
-<li><pre><code>$ git checkout HEAD</code></pre></li>
-<li><pre><code>$ git checkout HEAD data_cruncher.py</code></pre></li>
-<li><pre><code>$ git checkout HEAD~1 data_cruncher.py</code></pre></li>
-<li><pre><code>$ git checkout &lt;unique ID of last commit&gt; data_cruncher.py</code></pre></li>
-<li>Both 2 &amp; 4</li>
+
+<blockquote>
+<h2>How Git works, in cartoon form {.callout}</h2>
+
+<p><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHdpZHRoPSI1NTEuMTk1cHgiIGhlaWdodD0iNDA3LjQxNnB4IiB2aWV3Qm94PSIwIDAgNTUxLjE5NSA0MDcuNDE2IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1NTEuMTk1IDQwNy40MTYiDQoJIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGcgaWQ9IkxheWVyXzIiPg0KCTxnPg0KCQk8Zz4NCgkJCTxnPg0KCQkJCTxwYXRoIGZpbGw9IiMyMzFGMjAiIGQ9Ik0yNTAuOTAxLDE1MC4xOTVjLTAuMDYyLTcuMzEyLTEuMTk1LTE0Ljc3MywwLjQ1NC0yMS45ODVjMi4wMTUtOC44MTQsMTIuNzg5LTE0Ljk1NywyMS4wNTUtMTAuNDk2DQoJCQkJCWMxMC42MDEsNS43MjIsMTIuOTEzLDIzLjAxMywxMC45NiwzMy41NjljLTEuMTA4LDUuOTg2LTUuMzEsMTIuMDY4LTExLjQ1MywxMy41NzdjLTYuMTMyLDEuNTA3LTEyLjEzMS0zLjU2NS0xNS44My03Ljc4Ng0KCQkJCQljLTcuMzI0LTguMzU1LTEzLjM1NS0yMy44ODYtNS45OTQtMzMuOTM1YzAuNzI4LTAuOTkyLTEuMDk2LTEuMjc0LTEuNjE1LTAuNTY0Yy04LjQ0NCwxMS41MjUtMC45NTYsMjkuNTQzLDguNTExLDM4LjEzOQ0KCQkJCQljNC40MzgsNC4wMjksOS45NDQsNi43NzQsMTYuMDE1LDUuMjgzYzYuMDM4LTEuNDgzLDEwLjI4Ni03LjUzNywxMS45MjgtMTMuMTgzYzMuNTE0LTEyLjA3Ny0wLjU3OS0zMy4yNjQtMTQuMTkzLTM3LjU2OA0KCQkJCQljLTYuOTA0LTIuMTg0LTE1LjEzNSwyLjA2Ni0xOS4wMjgsNy42ODdjLTUuMjgxLDcuNjIyLTIuODM2LDE4Ljc5OS0yLjc2NSwyNy40MTENCgkJCQkJQzI0OC45NTMsMTUxLjM1NiwyNTAuOTA4LDE1MS4wNTgsMjUwLjkwMSwxNTAuMTk1TDI1MC45MDEsMTUwLjE5NXoiLz4NCgkJCTwvZz4NCgkJPC9nPg0KCQk8Zz4NCgkJCTxnPg0KCQkJCTxwYXRoIGZpbGw9IiMyMzFGMjAiIGQ9Ik0yNjYuODA5LDE2Ni4zMzRjLTIuNzkzLDExLjU4NS02LjgxNywyMy4xODgtNy4xODcsMzUuMTkzYy0wLjM3MiwxMi4wOSw1LjI1OCwyMi40NTYsMTIuOTksMzEuMzUzDQoJCQkJCWMwLjQyNiwwLjQ4OSwyLjI3Mi0wLjE5OCwxLjc5Ny0wLjc0NmMtOC4wNzEtOS4yODUtMTMuMjA0LTE5LjYwNy0xMi44MjEtMzIuMDc4YzAuMzU0LTExLjUxOSw0LjQ3MS0yMi44NjYsNy4xNS0zMy45NzYNCgkJCQkJQzI2OC45MDQsMTY1LjM5MiwyNjYuOTYzLDE2NS42OTYsMjY2LjgwOSwxNjYuMzM0TDI2Ni44MDksMTY2LjMzNHoiLz4NCgkJCTwvZz4NCgkJPC9nPg0KCQk8Zz4NCgkJCTxnPg0KCQkJCTxwYXRoIGZpbGw9IiMyMzFGMjAiIGQ9Ik0yNzMuMzYyLDE2NC42OTdjNy44OCwyLjYsMTUuOTQsNC41MzEsMjEuODU4LDEwLjcyOWM0LjA1MSw0LjI0Miw3LjAzNyw5Ljk2MywxMC4wMzgsMTQuOTc0DQoJCQkJCWMzLjI1Nyw1LjQzOCw1Ljc0NiwxMS4yMzYsNi44MTEsMTcuNTAzYzAuMDgxLDAuNDc5LDIuMDI2LDAuMDM3LDEuOTMyLTAuNTE4Yy0xLjkzOC0xMS40MTEtOC45MzMtMjIuODY5LTE2LjE5Mi0zMS43NjcNCgkJCQkJYy01LjcyMy03LjAxNC0xNC42NzktOS4wMjItMjIuODc0LTExLjcyN0MyNzQuNDU3LDE2My43MzUsMjcyLjcxNiwxNjQuNDgzLDI3My4zNjIsMTY0LjY5N0wyNzMuMzYyLDE2NC42OTd6Ii8+DQoJCQk8L2c+DQoJCTwvZz4NCgkJPGc+DQoJCQk8Zz4NCgkJCQk8cGF0aCBmaWxsPSIjMjMxRjIwIiBkPSJNMjcwLjA2MywxODcuMjMxYy0zLjI1Niw2LjE3My01LjAyMSwxMi45MjEtNS4xNjgsMTkuOTAxYy0wLjAxNCwwLjYzNCwxLjAwMiwwLjM4LDEuMzQzLDAuMjU5DQoJCQkJCWM5LjUxMi0zLjM3NCwxNC4zMTEtMTMuNDk5LDIzLjE2OC0xNy45NmMxLjE2LTAuNTg0LTAuNTc0LTAuODYtMS4xOTEtMC41NDljLTguNjg5LDQuMzc1LTEzLjQ3NSwxNC40NTYtMjIuNzMyLDE3Ljc0MQ0KCQkJCQljMC40NDcsMC4wODYsMC44OTYsMC4xNzMsMS4zNDMsMC4yNTljMC4xNDQtNi44NTksMS44My0xMy41NTEsNS4wMzMtMTkuNjI0QzI3Mi4yODMsMTg2LjQ1NCwyNzAuMzUxLDE4Ni42ODgsMjcwLjA2MywxODcuMjMxDQoJCQkJCUwyNzAuMDYzLDE4Ny4yMzF6Ii8+DQoJCQk8L2c+DQoJCTwvZz4NCgkJPGc+DQoJCQk8Zz4NCgkJCQk8cGF0aCBmaWxsPSIjMjMxRjIwIiBkPSJNMjg2LjE2OCwxNjkuNDM4YzQuNDYyLDAsOC45MjUsMCwxMy4zODcsMGMtMC4xOC0wLjM2NS0wLjM2LTAuNzMtMC41NC0xLjA5Ng0KCQkJCQljLTcuNjgyLDYuNzUyLTExLjQ3NSwxNi4yNDQtMTcuMzgyLDI0LjM3NmMtMC43MTgsMC45ODcsMS4xMDgsMS4yMTQsMS42MDUsMC41MjljNS43ODYtNy45NjQsOS41MjYtMTcuNDY1LDE3LjA0NC0yNC4wNzMNCgkJCQkJYzAuNjQ2LTAuNTY4LDAuMjA1LTEuMDk2LTAuNTQtMS4wOTZjLTQuNDYzLDAtOC45MjYsMC0xMy4zODksMEMyODUuMjcxLDE2OC4wNzgsMjg0Ljg1NCwxNjkuNDM4LDI4Ni4xNjgsMTY5LjQzOA0KCQkJCQlMMjg2LjE2OCwxNjkuNDM4eiIvPg0KCQkJPC9nPg0KCQk8L2c+DQoJCTxnPg0KCQkJPGc+DQoJCQkJPHBhdGggZmlsbD0iIzIzMUYyMCIgZD0iTTI3NC42NSwyMzMuNjY4YzE2LjQzMy0yLjA2OSwyNy4wODQtMTkuMzA2LDM3LjM3LTMwLjQ3MWMwLjU1Ni0wLjYwMy0xLjM4NS0wLjQ3NS0xLjc5NS0wLjAyOQ0KCQkJCQljLTkuNTk4LDEwLjQxNy0yMC4wMTEsMjcuNTI2LTM1LjMwNiwyOS40NTNDMjczLjk5NSwyMzIuNzM3LDI3My4zMSwyMzMuODM3LDI3NC42NSwyMzMuNjY4TDI3NC42NSwyMzMuNjY4eiIvPg0KCQkJPC9nPg0KCQk8L2c+DQoJPC9nPg0KCTxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iIzIzMUYyMCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBwb2ludHM9IjIxNy40MSwyNjEuMTk0IDMxNi44NiwxNjEuNzQ1IDM3OS4zMzIsMTYxLjc0NSANCgkJMzc5LjMzMiwxNjEuMTA0IDI3OS4yNDIsMjYxLjE5NCAJIi8+DQoJPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIzMUYyMCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBwb2ludHM9IjIzMi43MTEsMjYxLjE5NCAyMzIuNzExLDEwNS4wMDggMzMyLjc5OCw0LjkyMSANCgkJMzMyLjc5OCwxNjEuNzQ1IDMzMi4xNiwxNjEuNzQ1IAkiLz4NCjwvZz4NCjxnIGlkPSJMYXllcl8zIj4NCgk8ZyBpZD0iTGF5ZXJfNCI+DQoJCTxsaW5lYXJHcmFkaWVudCBpZD0iU1ZHSURfMV8iIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMzkyLjMzOTgiIHkxPSIxODAuMzI4MSIgeDI9IjM5Mi4zMzk4IiB5Mj0iMjQwLjE1MTQiPg0KCQkJPHN0b3AgIG9mZnNldD0iMC4wOTgyIiBzdHlsZT0ic3RvcC1jb2xvcjojQzRDNEM0Ii8+DQoJCQk8c3RvcCAgb2Zmc2V0PSIwLjUzMjYiIHN0eWxlPSJzdG9wLWNvbG9yOiM2ODY4NjgiLz4NCgkJCTxzdG9wICBvZmZzZXQ9IjEiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMDAwMDAiLz4NCgkJPC9saW5lYXJHcmFkaWVudD4NCgkJPHBhdGggZmlsbD0idXJsKCNTVkdJRF8xXykiIHN0cm9rZT0iIzIzMUYyMCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBkPSJNMzM4LjE1MiwyMzkuMDM2YzAtMTAuMDM0LDI0LjI2MS0xOC4xNjksNTQuMTg4LTE4LjE2OQ0KCQkJczU0LjE4OCw4LjEzNSw1NC4xODgsMTguMTY5djEuMTE1YzAsMCwwLTIuMjk0LDAtMy4zNzlzMC0zOC42OTYsMC0zOC42OTZ2MC40MjFjMC0xMC4wMzQtMjQuMjYxLTE4LjE2OS01NC4xODgtMTguMTY5DQoJCQlzLTU0LjE4OCw4LjEzNS01NC4xODgsMTguMTY5di0wLjQyMWMwLDAsMCwzNy4zNzUsMCwzOC42ODVjMCwxLjMwOSwwLDMuMzkxLDAsMy4zOTFWMjM5LjAzNnoiLz4NCgk8L2c+DQoJPGxpbmVhckdyYWRpZW50IGlkPSJTVkdJRF8yXyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIxMzguNTgxMSIgeTE9IjIyMS4zMzIiIHgyPSIxMzguNTgxMSIgeTI9IjI4MS4xNTUzIj4NCgkJPHN0b3AgIG9mZnNldD0iMC4wOTgyIiBzdHlsZT0ic3RvcC1jb2xvcjojQzRDNEM0Ii8+DQoJCTxzdG9wICBvZmZzZXQ9IjAuNTMyNiIgc3R5bGU9InN0b3AtY29sb3I6IzY4Njg2OCIvPg0KCQk8c3RvcCAgb2Zmc2V0PSIxIiBzdHlsZT0ic3RvcC1jb2xvcjojMDAwMDAwIi8+DQoJPC9saW5lYXJHcmFkaWVudD4NCgk8cGF0aCBmaWxsPSJ1cmwoI1NWR0lEXzJfKSIgc3Ryb2tlPSIjMjMxRjIwIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIGQ9Ik04NC4zOTQsMjgwLjA0YzAtMTAuMDM0LDI0LjI2MS0xOC4xNjksNTQuMTg4LTE4LjE2OQ0KCQlzNTQuMTg4LDguMTM1LDU0LjE4OCwxOC4xNjl2MS4xMTVjMCwwLDAtMi4yOTQsMC0zLjM3OXMwLTM4LjY5NiwwLTM4LjY5NnYwLjQyMWMwLTEwLjAzNC0yNC4yNjEtMTguMTY5LTU0LjE4OC0xOC4xNjkNCgkJcy01NC4xODgsOC4xMzUtNTQuMTg4LDE4LjE2OXYtMC40MjFjMCwwLDAsMzcuMzc1LDAsMzguNjg1YzAsMS4zMDksMCwzLjM5MSwwLDMuMzkxVjI4MC4wNHoiLz4NCgk8Zz4NCgkJPGxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMTI5RTQ5IiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHgxPSIxMDAuMTc1IiB5MT0iMjQ3LjQxOSIgeDI9IjEzMy44MzUiIHkyPSIyMzguNjIxIi8+DQoJCTxsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzEyOUU0OSIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiB4MT0iMTAwLjE3NSIgeTE9IjI0OS41MjIiIHgyPSIxMzMuODM1IiB5Mj0iMjQwLjcyNSIvPg0KCQk8bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiMxMjlFNDkiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgeDE9IjEwMC4xNzUiIHkxPSIyNTMuMzQ4IiB4Mj0iMTMzLjgzNSIgeTI9IjI0NC41NSIvPg0KCQk8bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiMxMjlFNDkiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgeDE9IjEwMC4xNzUiIHkxPSIyNTUuMjYiIHgyPSIxMzMuODM1IiB5Mj0iMjQ2LjQ2MyIvPg0KCQk8bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiMxMjlFNDkiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgeDE9IjEwMC4xNzUiIHkxPSIyNTcuMTczIiB4Mj0iMTMzLjgzNSIgeTI9IjI0OC4zNzUiLz4NCgk8L2c+DQoJPGc+DQoJCTxsaW5lIGZpbGw9IiMyMzFGMjAiIHN0cm9rZT0iI0VGNEE0NCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiB4MT0iMTQyLjY5NiIgeTE9IjIzNC4wMzEiIHgyPSIxNzYuNzM4IiB5Mj0iMjQzLjk3NyIvPg0KCQk8bGluZSBmaWxsPSIjMjMxRjIwIiBzdHJva2U9IiNFRjRBNDQiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgeDE9IjE0Mi42OTYiIHkxPSIyMzUuOTQzIiB4Mj0iMTc2LjczOCIgeTI9IjI0NS44ODkiLz4NCgkJPGxpbmUgZmlsbD0iIzIzMUYyMCIgc3Ryb2tlPSIjRUY0QTQ0IiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHgxPSIxNDIuNjk2IiB5MT0iMjM3Ljg1NiIgeDI9IjE3Ni43MzgiIHkyPSIyNDcuODAxIi8+DQoJCTxsaW5lIGZpbGw9IiMyMzFGMjAiIHN0cm9rZT0iI0VGNEE0NCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiB4MT0iMTQyLjY5NiIgeTE9IjI0NS41MDYiIHgyPSIxNzYuNzM4IiB5Mj0iMjU1LjQ1MSIvPg0KCQk8bGluZSBmaWxsPSIjMjMxRjIwIiBzdHJva2U9IiNFRjRBNDQiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgeDE9IjE0Mi42OTYiIHkxPSIyNDcuNDE5IiB4Mj0iMTc2LjczOCIgeTI9IjI1Ny4zNjMiLz4NCgkJPGxpbmUgZmlsbD0iIzIzMUYyMCIgc3Ryb2tlPSIjRUY0QTQ0IiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHgxPSIxNDIuNjk2IiB5MT0iMjQ5LjMzMSIgeDI9IjE3Ni43MzgiIHkyPSIyNTkuMjc2Ii8+DQoJCTxsaW5lIGZpbGw9IiMyMzFGMjAiIHN0cm9rZT0iI0VGNEE0NCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiB4MT0iMTQyLjY5NiIgeTE9IjI1MS4yNDQiIHgyPSIxNzYuNzM4IiB5Mj0iMjYxLjE4OCIvPg0KCQk8bGluZSBmaWxsPSIjMjMxRjIwIiBzdHJva2U9IiNFRjRBNDQiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgeDE9IjE0Mi42OTYiIHkxPSIyNTMuMTU2IiB4Mj0iMTc2LjczOCIgeTI9IjI2My4xMDIiLz4NCgkJPGxpbmUgZmlsbD0iIzIzMUYyMCIgc3Ryb2tlPSIjRUY0QTQ0IiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHgxPSIxNDIuNjk2IiB5MT0iMjU1LjA2OCIgeDI9IjE3Ni43MzgiIHkyPSIyNjUuMDE0Ii8+DQoJPC9nPg0KCTxnPg0KCQk8bGluZSBmaWxsPSIjMjMxRjIwIiBzdHJva2U9IiNFRjRBNDQiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgeDE9IjM1My45NjMiIHkxPSIzMjIuODkzIiB4Mj0iMzg4LjAwNSIgeTI9IjMzMi44MzgiLz4NCgkJPGxpbmUgZmlsbD0iIzIzMUYyMCIgc3Ryb2tlPSIjRUY0QTQ0IiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHgxPSIzNTMuOTYzIiB5MT0iMzI0LjgwNSIgeDI9IjM4OC4wMDUiIHkyPSIzMzQuNzUiLz4NCgkJPGxpbmUgZmlsbD0iIzIzMUYyMCIgc3Ryb2tlPSIjRUY0QTQ0IiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHgxPSIzNTMuOTYzIiB5MT0iMzI2LjcxOCIgeDI9IjM4OC4wMDUiIHkyPSIzMzYuNjYyIi8+DQoJCTxsaW5lIGZpbGw9IiMyMzFGMjAiIHN0cm9rZT0iI0VGNEE0NCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiB4MT0iMzUzLjk2MyIgeTE9IjMzNC4zNjciIHgyPSIzODguMDA1IiB5Mj0iMzQ0LjMxMiIvPg0KCQk8bGluZSBmaWxsPSIjMjMxRjIwIiBzdHJva2U9IiNFRjRBNDQiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgeDE9IjM1My45NjMiIHkxPSIzMzYuMjgiIHgyPSIzODguMDA1IiB5Mj0iMzQ2LjIyNSIvPg0KCQk8bGluZSBmaWxsPSIjMjMxRjIwIiBzdHJva2U9IiNFRjRBNDQiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgeDE9IjM1My45NjMiIHkxPSIzMzguMTkyIiB4Mj0iMzg4LjAwNSIgeTI9IjM0OC4xMzgiLz4NCgkJPGxpbmUgZmlsbD0iIzIzMUYyMCIgc3Ryb2tlPSIjRUY0QTQ0IiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHgxPSIzNTMuOTYzIiB5MT0iMzQwLjEwNSIgeDI9IjM4OC4wMDUiIHkyPSIzNTAuMDUiLz4NCgkJPGxpbmUgZmlsbD0iIzIzMUYyMCIgc3Ryb2tlPSIjRUY0QTQ0IiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHgxPSIzNTMuOTYzIiB5MT0iMzQyLjAxOCIgeDI9IjM4OC4wMDUiIHkyPSIzNTEuOTYzIi8+DQoJCTxsaW5lIGZpbGw9IiMyMzFGMjAiIHN0cm9rZT0iI0VGNEE0NCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiB4MT0iMzUzLjk2MyIgeTE9IjM0My45MyIgeDI9IjM4OC4wMDUiIHkyPSIzNTMuODc1Ii8+DQoJPC9nPg0KPC9nPg0KPGcgaWQ9IkxheWVyXzEiPg0KCTxnPg0KCQk8cGF0aCBmaWxsPSIjRkZGRkZGIiBzdHJva2U9IiMyMzFGMjAiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgZD0iTTE5Mi41NDgsMzY0LjU4NWMwLDAsMCwzNy42MSwwLDM4LjY5Ng0KCQkJYzAsMS4wODUsMC4zODIsMy4zNzksMC4zODIsMy4zNzljMCwxMC4wMzQtMjQuNjQzLDE4LjE2OC01NC41NjksMTguMTY4cy01NC41Ny04LjEzNC01NC41Ny0xOC4xNjhjMCwwLDAuMzgyLTIuMDgyLDAuMzgyLTMuMzkxDQoJCQljMC0xLjMxLDAtMzguNjg1LDAtMzguNjg1YzAsMTAuMDM0LDI0LjI2MSwxOC4xNjksNTQuMTg4LDE4LjE2OVMxOTIuNTQ4LDM3NC42MTksMTkyLjU0OCwzNjQuNTg1eiIvPg0KCQk8cmVjdCB4PSIxMTcuMDA1IiB5PSIzOTYuNDYiIGZpbGw9Im5vbmUiIHdpZHRoPSI0Mi43MTIiIGhlaWdodD0iMTAuMiIvPg0KCQk8dGV4dCB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDEyMS43OTk4IDQwMi4zOTg0KSIgZmlsbD0iIzIzMUYyMCIgZm9udC1mYW1pbHk9IidDb25zb2xhcyciIGZvbnQtc2l6ZT0iOC42MDYyIj5hMjEyOWNiPC90ZXh0Pg0KCTwvZz4NCgk8Zz4NCgkJPHBhdGggZmlsbD0iI0ZGRkZGRiIgc3Ryb2tlPSIjMjMxRjIwIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIGQ9Ik0xOTIuNTQ4LDMyMi43MDFjMCwwLDAsMzcuNjExLDAsMzguNjk2czAuMzgyLDMuMzc5LDAuMzgyLDMuMzc5DQoJCQljMCwxMC4wMzQtMjQuNjQzLDE4LjE2OS01NC41NjksMTguMTY5cy01NC41Ny04LjEzNS01NC41Ny0xOC4xNjljMCwwLDAuMzgyLTIuMDgyLDAuMzgyLTMuMzkxYzAtMS4zMSwwLTM4LjY4NSwwLTM4LjY4NQ0KCQkJYzAsMTAuMDM1LDI0LjI2MSwxOC4xNjksNTQuMTg4LDE4LjE2OVMxOTIuNTQ4LDMzMi43MzYsMTkyLjU0OCwzMjIuNzAxeiIvPg0KCQk8cmVjdCB4PSIxMTcuMDA1IiB5PSIzNTQuNTc2IiBmaWxsPSJub25lIiB3aWR0aD0iNDIuNzEyIiBoZWlnaHQ9IjEwLjIiLz4NCgkJPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAxMjEuNzk5OCAzNjAuNTE0NikiIGZpbGw9IiMyMzFGMjAiIGZvbnQtZmFtaWx5PSInQ29uc29sYXMnIiBmb250LXNpemU9IjguNjA2MiI+ODkyMTM0ZjwvdGV4dD4NCgk8L2c+DQoJPGc+DQoJCTxwYXRoIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iIzIzMUYyMCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBkPSJNMTkyLjU0OCwyODAuODE4YzAsMCwwLDM3LjYxLDAsMzguNjk1DQoJCQljMCwxLjA4NiwwLjM4MiwzLjM3OSwwLjM4MiwzLjM3OWMwLDEwLjAzNC0yNC42NDMsMTguMTY5LTU0LjU2OSwxOC4xNjlzLTU0LjU3LTguMTM1LTU0LjU3LTE4LjE2OWMwLDAsMC4zODItMi4wODIsMC4zODItMy4zOTENCgkJCXMwLTM4LjY4NCwwLTM4LjY4NGMwLDEwLjAzNCwyNC4yNjEsMTguMTY4LDU0LjE4OCwxOC4xNjhTMTkyLjU0OCwyOTAuODUzLDE5Mi41NDgsMjgwLjgxOHoiLz4NCgkJPHJlY3QgeD0iMTE3LjAwNSIgeT0iMzEyLjY5MiIgZmlsbD0ibm9uZSIgd2lkdGg9IjQyLjcxMiIgaGVpZ2h0PSIxMC4yIi8+DQoJCTx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMTIxLjc5OTggMzE4LjYzMDkpIiBmaWxsPSIjMjMxRjIwIiBmb250LWZhbWlseT0iJ0NvbnNvbGFzJyIgZm9udC1zaXplPSI4LjYwNjIiPjU5ZTIzMGE8L3RleHQ+DQoJPC9nPg0KCTxnPg0KCQk8cGF0aCBmaWxsPSIjRkZGRkZGIiBzdHJva2U9IiMyMzFGMjAiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgZD0iTTE5Mi41NDgsMjM4LjYyMWMwLDAsMCwzNy42MTEsMCwzOC42OTZzMC4zODIsMy4zNzksMC4zODIsMy4zNzkNCgkJCWMwLDEwLjAzNC0yNC42NDMsMTguMTY5LTU0LjU2OSwxOC4xNjlzLTU0LjU3LTguMTM1LTU0LjU3LTE4LjE2OWMwLDAsMC4zODItMi4wODIsMC4zODItMy4zOTFjMC0xLjMxLDAtMzguNjg1LDAtMzguNjg1DQoJCQljMCwxMC4wMzUsMjQuMjYxLDE4LjE2OSw1NC4xODgsMTguMTY5UzE5Mi41NDgsMjQ4LjY1NiwxOTIuNTQ4LDIzOC42MjF6Ii8+DQoJCTxyZWN0IHg9IjExNy4wMDUiIHk9IjI3MC40OTYiIGZpbGw9Im5vbmUiIHdpZHRoPSI0Mi43MTIiIGhlaWdodD0iMTAuMiIvPg0KCQk8dGV4dCB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDEyMS43OTk4IDI3Ni40MzQ2KSIgZmlsbD0iIzIzMUYyMCIgZm9udC1mYW1pbHk9IidDb25zb2xhcyciIGZvbnQtc2l6ZT0iOC42MDYyIj4zYTU0Zjc2PC90ZXh0Pg0KCTwvZz4NCgk8Zz4NCgkJPHBhdGggZmlsbD0iI0ZGRkZGRiIgc3Ryb2tlPSIjMjMxRjIwIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIGQ9Ik00NDYuNTI3LDE5OC4wNzZjMCwwLDAsMzcuNjExLDAsMzguNjk2czAuMzgzLDMuMzc5LDAuMzgzLDMuMzc5DQoJCQljMCwxMC4wMzQtMjQuNjQ0LDE4LjE2OS01NC41NywxOC4xNjlzLTU0LjU2OS04LjEzNS01NC41NjktMTguMTY5YzAsMCwwLjM4Mi0yLjA4MiwwLjM4Mi0zLjM5MWMwLTEuMzEsMC0zOC42ODUsMC0zOC42ODUNCgkJCWMwLDEwLjAzNCwyNC4yNjEsMTguMTY5LDU0LjE4OCwxOC4xNjlTNDQ2LjUyNywyMDguMTEsNDQ2LjUyNywxOTguMDc2eiIvPg0KCQk8cmVjdCB4PSIzNzAuOTg0IiB5PSIyMjkuOTUxIiBmaWxsPSJub25lIiB3aWR0aD0iNDIuNzEyIiBoZWlnaHQ9IjEwLjIiLz4NCgkJPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAzNzUuNzc5MyAyMzUuODkwNikiIGZpbGw9IiMyMzFGMjAiIGZvbnQtZmFtaWx5PSInQ29uc29sYXMnIiBmb250LXNpemU9IjguNjA2MiI+NDNmZTQyMzwvdGV4dD4NCgk8L2c+DQoJPGc+DQoJCTxyZWN0IHg9IjEzNC4wNyIgeT0iMTUxLjkyMiIgZmlsbD0iIzIzMUYyMCIgd2lkdGg9IjguNTgzIiBoZWlnaHQ9IjI3LjU4NSIvPg0KCQk8Zz4NCgkJCTxwb2x5Z29uIGZpbGw9IiMyMzFGMjAiIHBvaW50cz0iMTI4Ljg3OSwxNzYuNzE3IDEzOC40MTMsMTkzLjIzMSAxNDcuOTUsMTc2LjcxNyAJCQkiLz4NCgkJPC9nPg0KCTwvZz4NCgk8Zz4NCgkJPHJlY3QgeD0iMzg3Ljk5NiIgeT0iMTQ4LjEwMyIgZmlsbD0iIzIzMUYyMCIgd2lkdGg9IjguNTgyIiBoZWlnaHQ9IjI3LjU4NSIvPg0KCQk8Zz4NCgkJCTxwb2x5Z29uIGZpbGw9IiMyMzFGMjAiIHBvaW50cz0iMzgyLjgwNSwxNzIuODk3IDM5Mi4zMzksMTg5LjQxMiA0MDEuODc1LDE3Mi44OTcgCQkJIi8+DQoJCTwvZz4NCgk8L2c+DQoJPGc+DQoJCTxyZWN0IHg9IjQ3OS4zNDIiIHk9IjIyMC43NjgiIGZpbGw9IiM0REEyRDkiIHdpZHRoPSIyNy41ODUiIGhlaWdodD0iOC41ODMiLz4NCgkJPGc+DQoJCQk8cG9seWdvbiBmaWxsPSIjNERBMkQ5IiBwb2ludHM9IjQ4Mi4xMzIsMjE1LjU3NyA0NjUuNjE3LDIyNS4xMTEgNDgyLjEzMiwyMzQuNjQ3IAkJCSIvPg0KCQk8L2c+DQoJPC9nPg0KCTxyZWN0IHg9Ijk2LjUwNiIgeT0iMTI4LjIwNyIgZmlsbD0ibm9uZSIgd2lkdGg9Ijg0LjE0OSIgaGVpZ2h0PSIzNC40MjUiLz4NCgk8dGV4dCB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDEyNS40MjM4IDEzNC4zOTQ1KSI+PHRzcGFuIHg9IjAiIHk9IjAiIGZpbGw9IiMyMzFGMjAiIGZvbnQtZmFtaWx5PSInSGVsdmV0aWNhJyIgZm9udC1zaXplPSI4LjYwNjIiPmJyYW5jaDwvdHNwYW4+PHRzcGFuIHg9Ii0xLjAzOCIgeT0iMTAuMzI4IiBmaWxsPSIjMjMxRjIwIiBmb250LWZhbWlseT0iJ0NvbnNvbGFzJyIgZm9udC1zaXplPSI4LjYwNjIiPm1hc3RlcjwvdHNwYW4+PC90ZXh0Pg0KCTxyZWN0IHg9IjM1MC4yMTIiIHk9IjEzNi4zMDkiIGZpbGw9Im5vbmUiIHdpZHRoPSI4NC4xNDkiIGhlaWdodD0iMTIuMjQiLz4NCgk8dGV4dCB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDM2OC42MDI1IDE0Mi40OTYxKSIgZmlsbD0iIzIzMUYyMCIgZm9udC1mYW1pbHk9IidIZWx2ZXRpY2EnIiBmb250LXNpemU9IjguNjA2MiI+c3RhZ2luZyBhcmVhPC90ZXh0Pg0KCTxyZWN0IHg9IjQ0NC4xOTciIHk9IjIzNy40NzkiIGZpbGw9Im5vbmUiIHdpZHRoPSI4NC4xNDkiIGhlaWdodD0iMTIuMjQiLz4NCgk8dGV4dCB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDQ0Ni4wNTE4IDI0My40MTgpIiBmaWxsPSIjMjMxRjIwIiBmb250LWZhbWlseT0iJ0NvbnNvbGFzJyIgZm9udC1zaXplPSI4LjYwNjIiPmdpdCBhZGQgZmlsZTIudHh0PC90ZXh0Pg0KCTxnPg0KCQkNCgkJCTxyZWN0IHg9IjQ0NC41MjciIHk9IjE2Ni41NTQiIHRyYW5zZm9ybT0ibWF0cml4KDAuMjY0MyAwLjk2NDQgLTAuOTY0NCAwLjI2NDMgNTA0LjExODUgLTMwMC4xNzkxKSIgZmlsbD0iIzREQTJEOSIgd2lkdGg9IjguNTgzIiBoZWlnaHQ9IjI3LjU4NSIvPg0KCQk8Zz4NCgkJCTxwb2x5Z29uIGZpbGw9IiM0REEyRDkiIHBvaW50cz0iNDM1LjcwMSwxNzQuMTA4IDQyMi4yOTMsMTg3LjY2OSA0NDAuNzQxLDE5Mi41MDIgCQkJIi8+DQoJCTwvZz4NCgk8L2c+DQoJPGc+DQoJCTxwb2x5Z29uIGZpbGw9IiM0REEyRDkiIHBvaW50cz0iMzM1LjQzOCwzMjEuMTU4IDMzMi43MTksMzI5LjI5OSAxODUuMTM5LDI3Ni4xNDMgMTg3Ljg1OCwyNjguMDAzIAkJIi8+DQoJCTxnPg0KCQkJPHBvbHlnb24gZmlsbD0iIzREQTJEOSIgcG9pbnRzPSIzMjguNDI4LDMzMy4zMzggMzQ3LjExMiwzMjkuNTI2IDMzNC40NywzMTUuMjUgCQkJIi8+DQoJCTwvZz4NCgk8L2c+DQoJDQoJCTxyZWN0IHg9IjQwNS4wMjUiIHk9IjE5My45MjEiIHRyYW5zZm9ybT0ibWF0cml4KDAuOTY0NCAtMC4yNjQzIDAuMjY0MyAwLjk2NDQgLTM2Ljk2OTkgMTI1LjI2NjgpIiBmaWxsPSJub25lIiB3aWR0aD0iODQuMTUiIGhlaWdodD0iMTIuMjQiLz4NCgkNCgkJPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMC45NjQ0IC0wLjI2NDMgMC4yNjQzIDAuOTY0NCA0MDguMjYxNyAyMTAuNTAyKSIgZmlsbD0iIzIzMUYyMCIgZm9udC1mYW1pbHk9IidDb25zb2xhcyciIGZvbnQtc2l6ZT0iOC42MDYyIj5naXQgYWRkIGZpbGUxLnR4dDwvdGV4dD4NCgkNCgkJPHJlY3QgeD0iMTgyLjAwNSIgeT0iMzA2LjcwNSIgdHJhbnNmb3JtPSJtYXRyaXgoMC45NDE2IDAuMzM2NyAtMC4zMzY3IDAuOTQxNiAxMjAuMzQ0OSAtNjguMzIyMykiIGZpbGw9Im5vbmUiIHdpZHRoPSIxNTAuMzE3IiBoZWlnaHQ9IjEyLjI0Ii8+DQoJDQoJCTx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDAuOTQxNiAwLjMzNjcgLTAuMzM2NyAwLjk0MTYgMTk3LjA4MyAyOTEuMTM4NykiIGZpbGw9IiMyMzFGMjAiIGZvbnQtZmFtaWx5PSInQ29uc29sYXMnIiBmb250LXNpemU9IjguNjA2MiI+Z2l0IGNoZWNrb3V0IEhFQUQgZmlsZTEudHh0PC90ZXh0Pg0KCTxwb2x5Z29uIGZpbGw9Im5vbmUiIHBvaW50cz0iMzA2Ljg4MSwzOS4wOSAyNTQuNDc5LDkxLjQ5MiAyNTQuNDc5LDcwLjI2NCAzMDYuODgxLDE3Ljg2MiAJIi8+DQoJPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAtMSAwIDEgMjYxLjc1MjkgNzIuNDkyMikiIGZpbGw9IiMyMzFGMjAiIGZvbnQtZmFtaWx5PSInQ29uc29sYXMtQm9sZCciIGZvbnQtc2l6ZT0iMTMuNzY5OSI+Ly5naXQ8L3RleHQ+DQoJPGxpbmUgZmlsbD0iIzQ3NzlCQyIgc3Ryb2tlPSIjNDc3OUJDIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHgxPSI0NjcuNTI5IiB5MT0iMjAzLjM3MyIgeDI9IjUwNS4wMTUiIHkyPSIyMDMuMzczIi8+DQoJPGxpbmUgZmlsbD0iIzQ3NzlCQyIgc3Ryb2tlPSIjNDc3OUJDIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHgxPSI0NjcuNTI5IiB5MT0iMjA1LjI4NiIgeDI9IjUwNS4wMTUiIHkyPSIyMDUuMjg2Ii8+DQoJPGxpbmUgZmlsbD0iIzQ3NzlCQyIgc3Ryb2tlPSIjNDc3OUJDIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHgxPSI0NjcuNTI5IiB5MT0iMjA3LjE5OCIgeDI9IjUwNS4wMTUiIHkyPSIyMDcuMTk4Ii8+DQoJPGxpbmUgZmlsbD0iIzQ3NzlCQyIgc3Ryb2tlPSIjNDc3OUJDIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHgxPSI0NjcuNTI5IiB5MT0iMjA5LjExMSIgeDI9IjUwNS4wMTUiIHkyPSIyMDkuMTExIi8+DQoJPGxpbmUgZmlsbD0iIzQ3NzlCQyIgc3Ryb2tlPSIjNDc3OUJDIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHgxPSI0NjcuNTI5IiB5MT0iMjExLjAyMyIgeDI9IjUwNS4wMTUiIHkyPSIyMTEuMDIzIi8+DQoJPHJlY3QgeD0iMjQuMzQ3IiB5PSIyNDkuOTk1IiBmaWxsPSJub25lIiB3aWR0aD0iNTQuNTEyIiBoZWlnaHQ9IjE4LjM2MiIvPg0KCTx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMzYuNDYwOSAyNTkuNDk2MSkiIGZpbGw9IiMyMzFGMjAiIGZvbnQtZmFtaWx5PSInQ29uc29sYXMnIiBmb250LXNpemU9IjEzLjc2OTkiPkhFQUQ8L3RleHQ+DQoJPHJlY3QgeD0iMjQuMzQ3IiB5PSIyOTYuODg4IiBmaWxsPSJub25lIiB3aWR0aD0iNTQuNTEyIiBoZWlnaHQ9IjE4LjM2MiIvPg0KCTx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMjguODkwMSAzMDYuMzg4NykiIGZpbGw9IiMyMzFGMjAiIGZvbnQtZmFtaWx5PSInQ29uc29sYXMnIiBmb250LXNpemU9IjEzLjc2OTkiPkhFQUR+MTwvdGV4dD4NCgk8cmVjdCB4PSIyNC4zNDciIHk9IjM0NC4wMjQiIGZpbGw9Im5vbmUiIHdpZHRoPSI1NC41MTIiIGhlaWdodD0iMTguMzYyIi8+DQoJPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAyOC44OTAxIDM1My41MjU0KSIgZmlsbD0iIzIzMUYyMCIgZm9udC1mYW1pbHk9IidDb25zb2xhcyciIGZvbnQtc2l6ZT0iMTMuNzY5OSI+SEVBRH4yPC90ZXh0Pg0KCTxwYXRoIGZpbGw9IiM0REEyRDkiIGQ9Ik0zNzIuOTcsMjQyLjU2OWMtOC45NDksMy44MzUtMTcuOTA1LDcuNjY3LTI3LjAyLDExLjA5OWMtMi4xNDUsMC44MDgtNC4zLDEuNTg5LTYuNDY0LDIuMzQ0DQoJCWMtMC4wODYsMC4wMy0wLjE3MiwwLjA2LTAuMjU4LDAuMDljLTAuNzI5LDAuMjUyLTAuMzQ1LDAuMTIsMS4xNTEtMC4zOTZjLTAuMjU5LDAuMDg5LTAuNTE4LDAuMTc3LTAuNzc2LDAuMjY2DQoJCWMtMC41MTgsMC4xNzYtMS4wMzUsMC4zNDktMS41NTUsMC41MjFjLTEuMTIzLDAuMzc0LTIuMjUsMC43MzYtMy4zNzksMS4wOTJjLTQuMzk1LDEuMzg1LTguODM2LDIuNjE4LTEzLjMxNCwzLjY5NA0KCQljLTIuMzEyLDAuNTU2LTQuNjM1LDEuMDYzLTYuOTY2LDEuNTMxYy0wLjI4NCwwLjA1Ny0wLjU2OSwwLjExMy0wLjg1NCwwLjE2OWMwLjQ3Ny0wLjA5MywwLjk1My0wLjE4NiwxLjQzLTAuMjc4DQoJCWMtMC4xOTEsMC4wMzctMC4zODMsMC4wNzMtMC41NzQsMC4xMWMtMC41NzcsMC4xMDktMS4xNTUsMC4yMTUtMS43MzQsMC4zMTljLTEuMjcxLDAuMjI5LTIuNTQ3LDAuNDQzLTMuODI0LDAuNjQ3DQoJCWMtNS4yMTMsMC44MzQtMTAuNDYsMS40NDgtMTUuNzE5LDEuOWMtMi44NTcsMC4yNDUtNS43MTksMC40MzUtOC41ODIsMC41ODRjLTAuMzU1LDAuMDItMC43MTEsMC4wMzYtMS4wNjcsMC4wNTQNCgkJYy0xLjM5NCwwLjA2NywxLjgzNS0wLjA4LDAuNDM0LTAuMDJjLTAuNzA3LDAuMDMxLTEuNDE1LDAuMDU4LTIuMTIyLDAuMDgzYy0xLjUyNSwwLjA1NS0zLjA1LDAuMDk0LTQuNTc1LDAuMTIzDQoJCWMtNS43MywwLjExLTExLjQ2NiwwLjAyOC0xNy4xOS0wLjI0NmMtNC4yODktMC4yMDYtOC41NzEtMC41MzYtMTIuODQtMC45ODhjLTAuOTYtMC4xMDItMS45MTktMC4yMTItMi44NzgtMC4zMjcNCgkJYzIuMjY1LDAuMjcxLDAuMjY0LDAuMDI4LTAuMjQxLTAuMDM3Yy0wLjUyMy0wLjA2Ny0xLjA0Ny0wLjE0LTEuNTY5LTAuMjEyYy0yLjA2LTAuMjg0LTQuMTEzLTAuNjA3LTYuMTYxLTAuOTYyDQoJCWMtNy40MzctMS4yODYtMTQuODAzLTMuMDYyLTIxLjk0My01LjUxNmMwLjQ1NSwwLjE1NiwwLjkxLDAuMzEzLDEuMzY0LDAuNDcxYy03LjUxOS0yLjYwNC0xNC44NC01Ljk3NS0yMS4zMDItMTAuNjYNCgkJYzAuMzMxLDAuMjQxLTAuOTItMS4xOS0wLjkyLTEuMTlsMTIuMTQ3LTAuNTYzbC0yOC45MzctOS44MjFsLTUuODU0LDIyLjA4MWMwLDAsNi43NDMtNy4yLDcuNzAyLTYuMzkyDQoJCWM2LjQyLDUuNDI0LDEzLjg1NSw5LjQzOCwyMS42NjMsMTIuNDc1YzkuMzIyLDMuNjI2LDE5LjA1OSw2LjA2MiwyOC45MTksNy42NzljMTEuMjQyLDEuODQ1LDIyLjY0MSwyLjczOCwzNC4wMjcsMi44OTUNCgkJYzExLjkyNCwwLjE2MiwyMy45MTEtMC40MDEsMzUuNzU0LTEuODExYzEwLjI1Ny0xLjIyMiwyMC40NTQtMy4xODgsMzAuNDItNS45MDdjOS40MTQtMi41NjksMTguNjM5LTUuODQ2LDI3LjcxNC05LjQyMQ0KCQljNy4zMzItMi44ODcsMTQuNTc2LTUuOTksMjEuODE3LTkuMDkzYzEuODY4LTAuODAxLDYuMjIzLTMuNjA3LDMuODktNi4xMjhjLTAuOTgyLTEuMDYyLTIuNjUyLTEuMzQ4LTQuMDE0LTEuMzk2DQoJCUMzNzYuNzk2LDI0MS4zNjMsMzc0Ljc3OCwyNDEuNzk0LDM3Mi45NywyNDIuNTY5TDM3Mi45NywyNDIuNTY5eiIvPg0KCTxsaW5lIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iIzkxN0ZCQSIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiB4MT0iNDI4LjY0MyIgeTE9IjE2My4yNzUiIHgyPSI0NTkuNDk3IiB5Mj0iMTUzLjkwNCIvPg0KCTxsaW5lIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iIzkxN0ZCQSIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiB4MT0iNDI4LjY0MyIgeTE9IjE2NS4xODgiIHgyPSI0NTkuNDk3IiB5Mj0iMTU1LjgxNiIvPg0KCTxsaW5lIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iIzkxN0ZCQSIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiB4MT0iNDI4LjY0MyIgeTE9IjE2Ny4xIiB4Mj0iNDU5LjQ5NyIgeTI9IjE1Ny43MjkiLz4NCgk8bGluZSBmaWxsPSIjRkZGRkZGIiBzdHJva2U9IiM5MTdGQkEiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgeDE9IjQyOC42NDMiIHkxPSIxNzAuOTI1IiB4Mj0iNDU5LjQ5NyIgeTI9IjE2MS41NTQiLz4NCgk8bGluZSBmaWxsPSIjRkZGRkZGIiBzdHJva2U9IiM5MTdGQkEiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgeDE9IjQyOC42NDMiIHkxPSIxNzIuODM4IiB4Mj0iNDU5LjQ5NyIgeTI9IjE2My40NjYiLz4NCgk8cmVjdCB4PSIyMzEuMTgxIiB5PSIyNjQuMDg0IiBmaWxsPSJub25lIiB3aWR0aD0iODQuMTQ5IiBoZWlnaHQ9IjEyLjIzOSIvPg0KCTx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMjQ5LjU5NTcgMjcwLjAyMTUpIiBmaWxsPSIjMjMxRjIwIiBmb250LWZhbWlseT0iJ0NvbnNvbGFzJyIgZm9udC1zaXplPSI4LjYwNjIiPmdpdCBjb21taXQ8L3RleHQ+DQo8L2c+DQo8L3N2Zz4NCg==" alt="http://figshare.com/articles/How_Git_works_a_cartoon/1328266"/></p>
+
+<h2>Simplifying the Common Case {.callout}</h2>
+
+<p>If you read the output of <code>git status</code> carefully,
+you&#39;ll see that it includes this hint:</p>
+
+<pre><code class="bash">(use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)
+</code></pre>
+
+<p>As it says,
+<code>git checkout</code> without a version identifier restores files to the state saved in <code>HEAD</code>.
+The double dash <code>--</code> is needed to separate the names of the files being recovered
+from the command itself:
+without it,
+Git would try to use the name of the file as the commit identifier.</p>
+</blockquote>
+
+<p>The fact that files can be reverted one by one
+tends to change the way people organize their work.
+If everything is in one large document,
+it&#39;s hard (but not impossible) to undo changes to the introduction
+without also undoing changes made later to the conclusion.
+If the introduction and conclusion are stored in separate files,
+on the other hand,
+moving backward and forward in time becomes much easier.</p>
+
+<blockquote>
+<h2>Recovering Older Versions of a File {.challenge}</h2>
+
+<p>Jennifer has made changes to the Python script that she has been working on for weeks, and the
+modifications she made this morning &ldquo;broke&rdquo; the script and it no longer runs. She has spent
+~ 1hr trying to fix it, with no luck&hellip;</p>
+
+<p>Luckily, she has been keeping track of her project&#39;s versions using Git! Which commands below will
+let her recover the last committed version of her Python script called
+<code>data_cruncher.py</code>?</p>
+
+<ol>
+<li><pre><code>$ git checkout HEAD
+</code></pre></li>
+<li><pre><code>$ git checkout HEAD data_cruncher.py
+</code></pre></li>
+<li><pre><code>$ git checkout HEAD~1 data_cruncher.py
+</code></pre></li>
+<li><pre><code>$ git checkout &lt;unique ID of last commit&gt; data_cruncher.py
+</code></pre></li>
+<li><p>Both 2 &amp; 4</p></li>
 </ol>
-</div>
-</section>
-        </div>
-      </div>
-      </article>
-      <div class="footer">
-        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
-        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/git-novice">Source</a>
-        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
-        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
-      </div>
-    </div>
-    <!-- Javascript placed at the end of the document so the pages load faster -->
-    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
-    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
-  </body>
+</blockquote>
+
+</body>
+
 </html>

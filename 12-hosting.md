@@ -8,7 +8,7 @@ minutes: 10
 >
 > *   Explain different options for hosting scientific work.
 
-The second big question for groups that want to open up their work
+**The second big question** for groups that want to open up their work
 is where to host their code and data.
 One option is for the lab, the department, or the university to provide a server,
 manage accounts and backups,

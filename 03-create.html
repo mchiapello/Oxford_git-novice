@@ -1,89 +1,242 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="generator" content="pandoc">
-    <title>Software Carpentry: Version Control with Git</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
-    <link rel="stylesheet" type="text/css" href="css/swc.css" />
-    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
-    <meta charset="UTF-8" />
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body class="lesson">
-    <div class="container card">
-      <div class="banner">
-        <a href="http://software-carpentry.org" title="Software Carpentry">
-          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
-        </a>
-      </div>
-      <article>
-      <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-          <h1 class="title">Version Control with Git</h1>
-          <h2 class="subtitle">Creating a Repository</h2>
-<section class="objectives panel panel-warning">
-<div class="panel-heading">
-<h2><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
-</div>
-<div class="panel-body">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Learning Objectives {.objectives}</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<blockquote>
+<h2>Learning Objectives {.objectives}</h2>
+
 <ul>
-<li>Create a local Git repository.</li>
+<li>  Create a local Git repository.</li>
 </ul>
-</div>
-</section>
-<p>Once Git is configured, we can start using it. Let’s create a directory for our work and then move into that directory:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">mkdir</span> planets
-$ <span class="kw">cd</span> planets</code></pre>
-<p>Then we tell Git to make <code>planets</code> a <a href="reference.html#repository">repository</a>—a place where Git can store versions of our files:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> init</code></pre>
-<p>If we use <code>ls</code> to show the directory’s contents, it appears that nothing has changed:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">ls</span></code></pre>
-<p>But if we add the <code>-a</code> flag to show everything, we can see that Git has created a hidden directory within <code>planets</code> called <code>.git</code>:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">ls</span> -a</code></pre>
-<pre class="output"><code>.   ..  .git</code></pre>
-<p>Git stores information about the project in this special sub-directory. If we ever delete it, we will lose the project’s history.</p>
-<p>We can check that everything is set up correctly by asking Git to tell us the status of our project:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">$ <span class="kw">git</span> status</code></pre>
-<pre class="output"><code># On branch master
+</blockquote>
+
+<p>Once Git is configured,
+we can start using it.
+Let&#39;s create a directory for our work and then move into that directory:</p>
+
+<pre><code class="bash">$ mkdir planets
+$ cd planets
+</code></pre>
+
+<p>Then we tell Git to make <code>planets</code> a <a href="reference.html#repository">repository</a>&mdash;a place where
+Git can store versions of our files:</p>
+
+<pre><code class="bash">$ git init
+</code></pre>
+
+<p>If we use <code>ls</code> to show the directory&#39;s contents,
+it appears that nothing has changed:</p>
+
+<pre><code class="bash">$ ls
+</code></pre>
+
+<p>But if we add the <code>-a</code> flag to show everything,
+we can see that Git has created a hidden directory within <code>planets</code> called <code>.git</code>:</p>
+
+<pre><code class="bash">$ ls -a
+</code></pre>
+
+<pre><code class="output">.   ..  .git
+</code></pre>
+
+<p>Git stores information about the project in this special sub-directory.
+If we ever delete it,
+we will lose the project&#39;s history.</p>
+
+<p>We can check that everything is set up correctly
+by asking Git to tell us the status of our project:</p>
+
+<pre><code class="bash">$ git status
+</code></pre>
+
+<pre><code class="output"># On branch master
 #
 # Initial commit
 #
-nothing to commit (create/copy files and use &quot;git add&quot; to track)</code></pre>
-<section class="challenge panel panel-success">
-<div class="panel-heading">
-<h2><span class="glyphicon glyphicon-pencil"></span>Places to Create Git Repositories</h2>
-</div>
-<div class="panel-body">
-<p>Dracula starts a new project, <code>moons</code>, related to his <code>planets</code> project. Despite Wolfman’s concerns, he enters the following sequence of commands to create one Git repository inside another:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">cd</span>             <span class="co"># return to home directory</span>
-<span class="kw">mkdir</span> planets  <span class="co"># make a new directory planets</span>
-<span class="kw">cd</span> planets     <span class="co"># go into planets</span>
-<span class="kw">git</span> init       <span class="co"># make the planets directory a Git repository</span>
-<span class="kw">mkdir</span> moons    <span class="co"># make a sub-directory planets/moons</span>
-<span class="kw">cd</span> moons       <span class="co"># go into planets/moons</span>
-<span class="kw">git</span> init       <span class="co"># make the moons sub-directory a Git repository</span></code></pre>
-<p>Why is it a bad idea to do this? How can Dracula “undo” his last <code>git init</code>?</p>
-</div>
-</section>
-        </div>
-      </div>
-      </article>
-      <div class="footer">
-        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
-        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/git-novice">Source</a>
-        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
-        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
-      </div>
-    </div>
-    <!-- Javascript placed at the end of the document so the pages load faster -->
-    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
-    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
-  </body>
+nothing to commit (create/copy files and use &quot;git add&quot; to track)
+</code></pre>
+
+<blockquote>
+<h2>Places to Create Git Repositories {.challenge}</h2>
+
+<p>Dracula starts a new project, <code>moons</code>, related to his <code>planets</code> project.
+Despite Wolfman&#39;s concerns, he enters the following sequence of commands to
+create one Git repository inside another:</p>
+
+<pre><code class="bash">cd             # return to home directory
+mkdir planets  # make a new directory planets
+cd planets     # go into planets
+git init       # make the planets directory a Git repository
+mkdir moons    # make a sub-directory planets/moons
+cd moons       # go into planets/moons
+git init       # make the moons sub-directory a Git repository
+</code></pre>
+
+<p>Why is it a bad idea to do this?
+How can Dracula &ldquo;undo&rdquo; his last <code>git init</code>?</p>
+</blockquote>
+
+</body>
+
 </html>
